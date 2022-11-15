@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 struct userInformation
 {
     //Structure variables
@@ -50,6 +49,7 @@ void DisplayUserMenu();
 //User functions
 void CreateNewUser();
 void ViewExistingUser(vector<userInformation>&);
+void RemoveUser(vector<userInformation>&);
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -133,7 +133,6 @@ mainmenu:
     switch (mainMenuSelection)
     {
     case 4:
-
         // Display user management menu
     usermanagementmenu:
 
@@ -171,10 +170,12 @@ mainmenu:
             }
             break;
 
-
         case 2:
             //View existing users
             ViewExistingUser(users);
+
+            users.clear();
+            LoadCSV("users.csv", users); //Reload at return to user sub menu
 
             int vieworremoveexistingusersSelection;
             cin >> vieworremoveexistingusersSelection;
@@ -188,48 +189,23 @@ mainmenu:
                 goto mainmenu;
                 break;
             case 3:
-                //goto removeauser;
+                system("CLS");
+                RemoveUser(users);
+                goto mainmenu;
                 break;
             }
-
-
-        }
-
-    }
-
-    int userToRemove;
-
-    cout << "Remove a user";
-    cout << "-------------";
-    cout << endl;
-    cout << endl;
-    // display all users
-    cout << "--------------------------------------" << endl;
-    for (int b = 0; b < users.size(); b++)
-    {
-        cout << "(" << b << ") " << users[b].FirstName << " " << users[b].LastName << "|" << users[b].UserName << "|" << "Admin: ";
-        if (users[b].IsAdmin == 1)
-        {
-            cout << "True" << endl;
-        }
-        else
-        {
-            cout << "False" << endl;
         }
     }
-    cout << "--------------------------------------" << endl;
-    cout << endl;
-    cout << endl;
 
-    cout << "Enter the number assocated with the user: ";
-    cin >> userToRemove;
 
-    // Remove the user. It's as simple as this one line.
-    users.erase(users.begin() + userToRemove);
-    // Update the CSV file
-    WriteCSV("users.csv", users);
+
 
 }
+
+
+
+
+
 
 //----------------------------------------------------------------------------------------------------------------------------
 // User functions
@@ -301,8 +277,42 @@ void ViewExistingUser(vector<userInformation>& users) {
     cout << "Select one of the following options:" << endl;
     cout << "1) Return to previous menu" << endl;
     cout << "2) Return to main menu" << endl;
-    cout << "3) Remove a user";
+    cout << "3) Remove a user" << endl;
 
+}
+
+void RemoveUser(vector<userInformation>& users) {
+
+    int userToRemove;
+
+    cout << "Remove a user\n";
+    Line(60, '-', true);
+    cout << endl;
+    // display all users
+    Line(60, '-', true);
+    for (int b = 0; b < users.size(); b++)
+    {
+        cout << "(" << b << ") " << users[b].FirstName << " " << users[b].LastName << "|" << users[b].UserName << "|" << "Admin: ";
+        if (users[b].IsAdmin == 1)
+        {
+            cout << "True" << endl;
+        }
+        else
+        {
+            cout << "False" << endl;
+        }
+    }
+    cout << "--------------------------------------" << endl;
+    cout << endl;
+    cout << endl;
+
+    cout << "Enter the number assocated with the user: ";
+    cin >> userToRemove;
+
+    // Remove the user. It's as simple as this one line.
+    users.erase(users.begin() + userToRemove);
+    // Update the CSV file
+    WriteCSV("users.csv", users);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
