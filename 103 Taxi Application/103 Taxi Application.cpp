@@ -43,6 +43,8 @@ void Line(int, char, bool); //length, character, dropline after called t/f
 void DisplayMainMenu();
 void DisplayUserMenu();
 
+void CreateNewUser();
+
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -137,10 +139,33 @@ mainmenu:
         //Sub menu selection
         switch (userManagementMenu) {
         case 1:
-            //CreateNewUser();
-            goto createnewuser;
+
+            //Create new user
+
+            system("CLS");
+            CreateNewUser();
+
+            cout << endl;
+            Line(60, '-', true);
+            cout << "Select one of the following options:" << endl;
+            cout << "1) Return to previous menu" << endl;
+            cout << "2) Return to main menu" << endl;
+
+            int newuserAccountMenuOptions;
+            cin >> newuserAccountMenuOptions;
+
+            switch (newuserAccountMenuOptions)
+            {
+            case 1:
+                goto usermanagementmenu;
+            case 2:
+                goto mainmenu;
+            }
             break;
+
+
         case 2:
+            //View existing users
             goto viewexistingusers;
             break;
         }
@@ -217,7 +242,12 @@ removeauser:
     // Update the CSV file
     WriteCSV("users.csv", users);
 
-createnewuser:
+}
+
+//----------------------------------------------------------------------------------------------------------------------------
+// Create new user
+
+void CreateNewUser() {
 
     string newuserFirstName;
     string newuserLastName;
@@ -228,7 +258,7 @@ createnewuser:
     // show screen to create a new user.
     cout << endl;
     cout << "Add new user account" << endl;
-    cout << endl;
+    Line(60, '=', true);
     cout << endl;
     cout << "Enter person's first name: ";
     cin >> newuserFirstName;
@@ -260,28 +290,8 @@ createnewuser:
     cout << endl;
     cout << "Name: " << newuserFirstName << " " << newuserLastName << endl;
     cout << "Username: " << newuserUserName << "   Password: " << newuserPassword << endl;
-    cout << endl;
-    cout << endl;
-    cout << "-------------------------" << endl;
-    cout << "Select one of the following options:" << endl;
-    cout << "1) Return to previous menu" << endl;
-    cout << "2) Return to main menu" << endl;
-
-    int newuserAccountMenuOptions;
-    cin >> newuserAccountMenuOptions;
-
-    switch (newuserAccountMenuOptions)
-    {
-    case 1:
-        goto usermanagementmenu;
-    case 2:
-        goto mainmenu;
-    }
-
-
-
-
 }
+
 
 
 //----------------------------------------------------------------------------------------------------------------------------
