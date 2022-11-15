@@ -38,6 +38,11 @@ void WriteCSV(string, vector<userInformation>&);
 //Misc
 void Line(int, char, bool); //length, character, dropline after called t/f
 
+//Menus
+//Main menu
+void DisplayMainMenu();
+void DisplayUserMenu();
+
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -51,14 +56,11 @@ loadalldata:
     vector<userInformation> users;
     LoadCSV("users.csv", users); //"users.csv" is the file location so just adjust this as required. 
 
-    cout << users[1].UserName << "  " << users[0].Password << "\n\n"; //debug
-
-
     // Display login screen
 login:
 
     cout << "Taxi Management System " << endl;
-    Line(30, '=', true);
+    Line(60, '=', true);
     cout << endl;
     cout << "Please login to continue." << endl;
 
@@ -113,23 +115,9 @@ loginfail:
     // Display main menu
 mainmenu:
     system("CLS"); //Clear console
+    DisplayMainMenu();
 
-    cout << "Welcome to the Taxi booking system" << endl;
-    Line(30, '=', true);
-    cout << endl;
-    cout << "Please select one of the following options\n\n";
-    cout << "1) Book a Taxi" << endl;
-    cout << "2) Lodge Complaint" << endl;
-    cout << "3) Report Lost Item" << endl;
-    if (IsAdminUser)
-    {
-        cout << "4) Add, view or remove users - Admin only" << endl;
-    }
-
-    cout << endl;
-    cout << "Please make a selection from above." << endl;
-
-    // init input var
+    // user input
     int mainMenuSelection;
     cin >> mainMenuSelection;
 
@@ -139,26 +127,22 @@ mainmenu:
 
         // Display user management menu
     usermanagementmenu:
+        system("CLS"); //Clear console
+        DisplayUserMenu();
 
-        cout << endl;
-        cout << "Add, view and remove existing users\n";
-        Line(30, '=', true);
-        cout << endl;
-        cout << "1) Add new user" << endl;
-        cout << "2) View or remove existing users and account privledges" << endl;
-        cout << endl;
-        cout << endl;
-
+        // user input
         int userManagementMenu;
         cin >> userManagementMenu;
 
-        if (userManagementMenu == 1)
-        {
+        //Sub menu selection
+        switch (userManagementMenu) {
+        case 1:
+            //CreateNewUser();
             goto createnewuser;
-        }
-        else if (userManagementMenu == 2)
-        {
+            break;
+        case 2:
             goto viewexistingusers;
+            break;
         }
 
     }
@@ -166,7 +150,7 @@ mainmenu:
 viewexistingusers:
 
     // display all users
-    Line(30, '-', true);
+    Line(60, '-', true);
     for (int b = 0; b < users.size(); b++)
     {
         cout << "(" << b << ") " << users[b].FirstName << " " << users[b].LastName << "|" << users[b].UserName << "|" << "Admin: ";
@@ -179,7 +163,7 @@ viewexistingusers:
             cout << "False";
         }
     }
-    Line(30, '-', true);
+    Line(60, '-', true);
     cout << endl;
     cout << "Select one of the following options:" << endl;
     cout << "1) Return to previous menu" << endl;
@@ -300,17 +284,42 @@ createnewuser:
 }
 
 
+//----------------------------------------------------------------------------------------------------------------------------
+// Menu Functions
 
+void DisplayMainMenu() {
 
+    cout << "Main menu" << endl;
+    Line(60, '=', true);
+    cout << endl;
+    cout << "Please select one of the following options\n\n";
+    cout << "1) Book a Taxi" << endl;
+    cout << "2) Lodge Complaint" << endl;
+    cout << "3) Report and view lost items" << endl;
+    if (IsAdminUser)
+    {
+        cout << "4) Add, view or remove users - Admin only" << endl;
+    }
 
+    cout << endl;
+    cout << "Enter selection : ";
+}
 
+void DisplayUserMenu() {
+    cout << endl;
+    cout << "Add, view and remove existing users\n";
+    Line(60, '=', true);
+    cout << endl;
+    cout << "1) Add new user" << endl;
+    cout << "2) View or remove existing users and account privledges" << endl;
+    cout << endl;
+    cout << "Enter selection : ";
+}
 
 
 
 //----------------------------------------------------------------------------------------------------------------------------
 //Functions
-
-
 
 
 //Load CSV function
