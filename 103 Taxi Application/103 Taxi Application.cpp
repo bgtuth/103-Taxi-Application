@@ -4,48 +4,81 @@
 #include <sstream>
 #include <vector>
 using namespace std;
+
+//struct userInformation
+//{
+//public:
+//    userInformation(
+//        string firstname,
+//        string lastname,
+//        string username,
+//        string password,
+//        int isadmin
+//    )
+//    {
+//        FirstName = firstname;
+//        LastName = lastname;
+//        UserName = username;
+//        Password = password;
+//        IsAdmin = isadmin;
+//    }
+//
+//    string FirstName;
+//    string LastName;
+//    string UserName;
+//    string Password;
+//    int IsAdmin;
+//};
+
 struct userInformation
 {
-public:
-    userInformation(
-        string firstname,
-        string lastname,
-        string username,
-        string password,
-        int isadmin
-    )
-    {
-        FirstName = firstname;
-        LastName = lastname;
-        UserName = username;
-        Password = password;
-        IsAdmin = isadmin;
-    }
-
+    //Structure variables
     string FirstName;
     string LastName;
     string UserName;
     string Password;
     int IsAdmin;
+
+    //Constructor
+    userInformation(string FirstName, string LastName, string UserName, string Password, int IsAdmin) {
+        this->FirstName; //References original var names so you don't need two sets of names
+        this->LastName;
+        this->UserName;
+        this->IsAdmin;
+    }
 };
+
+
 
 bool IsAdminUser = false;
 
+//Prototype functions
 
-//Prototype function
+//Load & write
 void LoadCSV(string, vector<userInformation>&);
 void WriteCSV(string, vector<userInformation>&);
+
+//Misc
+void Line(int, char, bool); //length, character, dropline after called t/f
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------
+//Main
 
 int main()
 {
 
+    //Load in existing user data from users.csv at start of program
 loadalldata:
     vector<userInformation> users;
-    LoadCSV("C:\\Users\\admin\\Documents\\Zoom\\users.txt", users); //"users.txt" is the file location so just adjust this as required. 
+    LoadCSV("users.csv", users); //"users.csv" is the file location so just adjust this as required. 
+
+    //Display login screen
 login:
 
-    cout << "Welcome to the Taxi booking system" << endl;
-    cout << "----------------------------------" << endl;
+    cout << "Taxi Management System " << endl;
+    Line(30, '=', true);
     cout << endl;
     cout << "Please login to continue." << endl;
 
@@ -217,7 +250,7 @@ removeauser:
     // Remove the user. It's as simple as this one line.
     users.erase(users.begin() + userToRemove);
     // Update the CSV file
-    WriteCSV("C:\\Users\\admin\\Documents\\Zoom\\users.txt", users);
+    WriteCSV("users.csv", users);
 
 createnewuser:
 
@@ -253,7 +286,7 @@ createnewuser:
 
     // save to file system.
     ofstream appfile;
-    appfile.open("C:\\Users\\932412335\\source\\repos\\dominicwestall\\users.txt", ios::app);
+    appfile.open("users.csv", ios::app);
     appfile << newuser[0].FirstName << "," << newuser[0].LastName << "," << newuser[0].UserName << "," << newuser[0].Password << "," << newuser[0].IsAdmin << endl;
     appfile.close();
 
@@ -285,6 +318,20 @@ createnewuser:
 
 }
 
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------
+//Functions
+
+
+
+
 //Load CSV function
 void LoadCSV(string filename, vector<userInformation>& users) { //Use reference so it doesn't make a copy of the vector and edits the original
 
@@ -313,6 +360,8 @@ void LoadCSV(string filename, vector<userInformation>& users) { //Use reference 
         line = "";
     }
 }
+
+//Write CSV function
 void WriteCSV(string filename, vector<userInformation>& users)
 {
     int i = 0; //Starts at vector index of first driver
@@ -326,4 +375,15 @@ void WriteCSV(string filename, vector<userInformation>& users)
     }
 
     appfile.close();
+}
+
+//Draw line
+void Line(int nChar, char c, bool dropline) {
+    for (int i = 1; i <= nChar; i++) {
+        cout << c;
+    }
+    if (dropline == true) {
+        cout << endl;
+    }
+
 }
