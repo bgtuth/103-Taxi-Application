@@ -3,6 +3,11 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <iomanip>
+
+//Headers
+//#include "UserFunctions.h"
+
 using namespace std;
 
 
@@ -25,10 +30,9 @@ struct userInformation
     }
 };
 
-
-
 bool IsAdminUser = false;
 
+//----------------------------------------------------------------------------------------------------------------------------
 //Prototype functions
 
 //Load & write
@@ -38,13 +42,14 @@ void WriteCSV(string, vector<userInformation>&);
 //Misc
 void Line(int, char, bool); //length, character, dropline after called t/f
 
-//Menus
+
 //Main menu
 void DisplayMainMenu();
 void DisplayUserMenu();
 
+//User functions
 void CreateNewUser();
-
+void ViewExistingUser(vector<userInformation>&);
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -52,14 +57,13 @@ void CreateNewUser();
 
 int main()
 {
-
     // Load in existing user data from users.csv at start of program
-loadalldata:
+
     vector<userInformation> users;
     LoadCSV("users.csv", users); //"users.csv" is the file location so just adjust this as required. 
 
+
     // Display login screen
-login:
 
     cout << "Taxi Management System " << endl;
     Line(60, '=', true);
@@ -109,10 +113,13 @@ login:
             cout << "Incorrect username and/or password. Try again. " << i << endl;
         }
     }
+
     // Failed login message
 loginfail:
+
     cout << "You failed to login." << endl;
-    exit;
+    return 0;
+
 
     // Display main menu
 mainmenu:
@@ -129,6 +136,7 @@ mainmenu:
 
         // Display user management menu
     usermanagementmenu:
+
         system("CLS"); //Clear console
         DisplayUserMenu();
 
@@ -166,49 +174,28 @@ mainmenu:
 
         case 2:
             //View existing users
-            goto viewexistingusers;
-            break;
+            ViewExistingUser(users);
+
+            int vieworremoveexistingusersSelection;
+            cin >> vieworremoveexistingusersSelection;
+
+            switch (vieworremoveexistingusersSelection)
+            {
+            case 1:
+                goto usermanagementmenu;
+                break;
+            case 2:
+                goto mainmenu;
+                break;
+            case 3:
+                //goto removeauser;
+                break;
+            }
+
+
         }
 
     }
-
-viewexistingusers:
-
-    // display all users
-    Line(60, '-', true);
-    for (int b = 0; b < users.size(); b++)
-    {
-        cout << "(" << b << ") " << users[b].FirstName << " " << users[b].LastName << "|" << users[b].UserName << "|" << "Admin: ";
-        if (users[b].IsAdmin == 1)
-        {
-            cout << "True";
-        }
-        else
-        {
-            cout << "False";
-        }
-    }
-    Line(60, '-', true);
-    cout << endl;
-    cout << "Select one of the following options:" << endl;
-    cout << "1) Return to previous menu" << endl;
-    cout << "2) Return to main menu" << endl;
-    cout << "3) Remove a user";
-
-    int vieworremoveexistingusersSelection;
-    cin >> vieworremoveexistingusersSelection;
-
-    switch (vieworremoveexistingusersSelection)
-    {
-    case 1:
-        goto usermanagementmenu;
-    case 2:
-        goto mainmenu;
-    case 3:
-        goto removeauser;
-    }
-
-removeauser:
 
     int userToRemove;
 
@@ -245,7 +232,7 @@ removeauser:
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
-// Create new user
+// User functions
 
 void CreateNewUser() {
 
@@ -292,7 +279,31 @@ void CreateNewUser() {
     cout << "Username: " << newuserUserName << "   Password: " << newuserPassword << endl;
 }
 
+void ViewExistingUser(vector<userInformation>& users) {
+    // Display all users
+    Line(60, '-', true);
+    for (int i = 0; i < users.size(); i++)
+    {
+        cout << "(" << i << ") " << users[i].FirstName << " " << users[i].LastName << "|" << users[i].UserName << "|" << "Admin: ";
+        if (users[i].IsAdmin == 1)
+        {
+            cout << "True";
+        }
+        else
+        {
+            cout << "False";
+        }
 
+        cout << endl;
+    }
+    Line(60, '-', true);
+    cout << endl;
+    cout << "Select one of the following options:" << endl;
+    cout << "1) Return to previous menu" << endl;
+    cout << "2) Return to main menu" << endl;
+    cout << "3) Remove a user";
+
+}
 
 //----------------------------------------------------------------------------------------------------------------------------
 // Menu Functions
