@@ -42,14 +42,19 @@ void WriteCSV(string, vector<userInformation>&);
 void Line(int, char, bool); //length, character, dropline after called t/f
 
 
-//Main menu
+//Menus
 void DisplayMainMenu();
 void DisplayUserMenu();
+void DisplayBookingMenu();
 
 //User functions
 void CreateNewUser();
 void ViewExistingUser(vector<userInformation>&);
 void RemoveUser(vector<userInformation>&);
+
+//Book taxi functions
+void BookRide();
+void ViewPastBookings();
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -74,6 +79,7 @@ int main()
     string username;
     string password;
 
+    //Check three attempts loop
     for (int i = 0; i < 3; i++)
     {
         cout << "Username : ";
@@ -132,8 +138,27 @@ mainmenu:
 
     switch (mainMenuSelection)
     {
+    case 1:
+        //Book Taxi, View past bookings
+    booktaximenu:
+
+        system("CLS"); //Clear console
+        DisplayBookingMenu();
+
+        // user input
+        int taxiBookingMenu;
+        cin >> taxiBookingMenu;
+
+        switch (taxiBookingMenu) {
+        case 1:
+            break;
+        case 2:
+            break;
+        }
+
+
     case 4:
-        // Display user management menu
+        // Add, remove and view existing users
     usermanagementmenu:
 
         system("CLS"); //Clear console
@@ -151,6 +176,10 @@ mainmenu:
 
             system("CLS");
             CreateNewUser();
+
+            //Reload users vector contents to reflect any changes
+            users.clear();
+            LoadCSV("users.csv", users);
 
             cout << endl;
             Line(60, '-', true);
@@ -174,8 +203,9 @@ mainmenu:
             //View existing users
             ViewExistingUser(users);
 
+            //Reload users vector contents to reflect any changes
             users.clear();
-            LoadCSV("users.csv", users); //Reload at return to user sub menu
+            LoadCSV("users.csv", users);
 
             int vieworremoveexistingusersSelection;
             cin >> vieworremoveexistingusersSelection;
@@ -184,31 +214,56 @@ mainmenu:
             {
             case 1:
                 goto usermanagementmenu;
-                break;
             case 2:
                 goto mainmenu;
-                break;
             case 3:
                 system("CLS");
                 RemoveUser(users);
                 goto mainmenu;
-                break;
             }
         }
     }
 
-
-
-
 }
-
-
-
-
 
 
 //----------------------------------------------------------------------------------------------------------------------------
 // User functions
+
+//Book taxi functions
+void DisplayBookingMenu() {
+    cout << endl;
+    cout << "Book Taxi, View past bookings\n";
+    Line(60, '=', true);
+    cout << endl;
+    cout << "1) Book new taxi ride" << endl;
+    cout << "2) View past taxi bookings" << endl;
+    cout << endl;
+    cout << "Enter selection : ";
+}
+
+
+void BookRide() {
+
+}
+
+void ViewPastBookings() {
+
+}
+
+//----------------------------------------------------------------------------------------------------------------------------
+// User functions
+
+void DisplayUserMenu() {
+    cout << endl;
+    cout << "Add, view and remove existing users\n";
+    Line(60, '=', true);
+    cout << endl;
+    cout << "1) Add new user" << endl;
+    cout << "2) View or remove existing users and account privledges" << endl;
+    cout << endl;
+    cout << "Enter selection : ";
+}
 
 void CreateNewUser() {
 
@@ -316,7 +371,7 @@ void RemoveUser(vector<userInformation>& users) {
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
-// Menu Functions
+// Main menu functions
 
 void DisplayMainMenu() {
 
@@ -336,22 +391,8 @@ void DisplayMainMenu() {
     cout << "Enter selection : ";
 }
 
-void DisplayUserMenu() {
-    cout << endl;
-    cout << "Add, view and remove existing users\n";
-    Line(60, '=', true);
-    cout << endl;
-    cout << "1) Add new user" << endl;
-    cout << "2) View or remove existing users and account privledges" << endl;
-    cout << endl;
-    cout << "Enter selection : ";
-}
-
-
-
 //----------------------------------------------------------------------------------------------------------------------------
 //Functions
-
 
 //Load CSV function
 void LoadCSV(string filename, vector<userInformation>& users) { //Use reference so it doesn't make a copy of the vector and edits the original
