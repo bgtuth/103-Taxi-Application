@@ -5,30 +5,6 @@
 #include <vector>
 using namespace std;
 
-//struct userInformation
-//{
-//public:
-//    userInformation(
-//        string firstname,
-//        string lastname,
-//        string username,
-//        string password,
-//        int isadmin
-//    )
-//    {
-//        FirstName = firstname;
-//        LastName = lastname;
-//        UserName = username;
-//        Password = password;
-//        IsAdmin = isadmin;
-//    }
-//
-//    string FirstName;
-//    string LastName;
-//    string UserName;
-//    string Password;
-//    int IsAdmin;
-//};
 
 struct userInformation
 {
@@ -41,10 +17,11 @@ struct userInformation
 
     //Constructor
     userInformation(string FirstName, string LastName, string UserName, string Password, int IsAdmin) {
-        this->FirstName; //References original var names so you don't need two sets of names
-        this->LastName;
-        this->UserName;
-        this->IsAdmin;
+        this->FirstName = FirstName; //References original var names so you don't need two sets of names
+        this->LastName = LastName;
+        this->UserName = UserName;
+        this->Password = Password;
+        this->IsAdmin = IsAdmin;
     }
 };
 
@@ -69,12 +46,15 @@ void Line(int, char, bool); //length, character, dropline after called t/f
 int main()
 {
 
-    //Load in existing user data from users.csv at start of program
+    // Load in existing user data from users.csv at start of program
 loadalldata:
     vector<userInformation> users;
     LoadCSV("users.csv", users); //"users.csv" is the file location so just adjust this as required. 
 
-    //Display login screen
+    cout << users[1].UserName << "  " << users[0].Password << "\n\n"; //debug
+
+
+    // Display login screen
 login:
 
     cout << "Taxi Management System " << endl;
@@ -82,15 +62,16 @@ login:
     cout << endl;
     cout << "Please login to continue." << endl;
 
+    // init variables for input
     string username;
     string password;
 
     for (int i = 0; i < 3; i++)
     {
-        cout << "Username: ";
+        cout << "Username : ";
         cin >> username;
 
-        cout << "Password:";
+        cout << "Password : ";
         cin >> password;
 
         // check username and password against login database.
@@ -124,18 +105,19 @@ login:
             cout << "Incorrect username and/or password. Try again. " << i << endl;
         }
     }
-
+    // Failed login message
 loginfail:
     cout << "You failed to login." << endl;
     exit;
 
+    // Display main menu
 mainmenu:
+    system("CLS"); //Clear console
 
-    cout << endl;
-    cout << endl;
     cout << "Welcome to the Taxi booking system" << endl;
-    cout << "----------------------------------" << endl;
+    Line(30, '=', true);
     cout << endl;
+    cout << "Please select one of the following options\n\n";
     cout << "1) Book a Taxi" << endl;
     cout << "2) Lodge Complaint" << endl;
     cout << "3) Report Lost Item" << endl;
@@ -147,6 +129,7 @@ mainmenu:
     cout << endl;
     cout << "Please make a selection from above." << endl;
 
+    // init input var
     int mainMenuSelection;
     cin >> mainMenuSelection;
 
@@ -154,13 +137,12 @@ mainmenu:
     {
     case 4:
 
+        // Display user management menu
     usermanagementmenu:
 
-        // Display user management menu
         cout << endl;
-        cout << "Add, view and remove existing users" << endl;
-        cout << endl;
-        cout << endl;
+        cout << "Add, view and remove existing users\n";
+        Line(30, '=', true);
         cout << endl;
         cout << "1) Add new user" << endl;
         cout << "2) View or remove existing users and account privledges" << endl;
@@ -184,7 +166,7 @@ mainmenu:
 viewexistingusers:
 
     // display all users
-    cout << "--------------------------------------" << endl;
+    Line(30, '-', true);
     for (int b = 0; b < users.size(); b++)
     {
         cout << "(" << b << ") " << users[b].FirstName << " " << users[b].LastName << "|" << users[b].UserName << "|" << "Admin: ";
@@ -197,8 +179,7 @@ viewexistingusers:
             cout << "False";
         }
     }
-    cout << "--------------------------------------" << endl;
-    cout << endl;
+    Line(30, '-', true);
     cout << endl;
     cout << "Select one of the following options:" << endl;
     cout << "1) Return to previous menu" << endl;
@@ -281,10 +262,10 @@ createnewuser:
     vector<userInformation> newuser;
     newuser.push_back(userInformation(newuserFirstName, newuserLastName, newuserUserName, newuserPassword, newuserAdminRights));
 
-    // test user data has been recorded ok.
+    // Return data to test if the user data has been recorded ok.
     cout << newuser[0].FirstName << "," << newuser[0].LastName << "," << newuser[0].UserName << "," << newuser[0].Password << "," << newuser[0].IsAdmin << endl;
 
-    // save to file system.
+    // Save to file system.
     ofstream appfile;
     appfile.open("users.csv", ios::app);
     appfile << newuser[0].FirstName << "," << newuser[0].LastName << "," << newuser[0].UserName << "," << newuser[0].Password << "," << newuser[0].IsAdmin << endl;
@@ -340,21 +321,25 @@ void LoadCSV(string filename, vector<userInformation>& users) { //Use reference 
     string line = "";
     while (getline(inputFile, line))
     {
+        //Init vars to load data into
         string FirstName;
         string LastName;
         string UserName;
         string Password;
         int IsAdmin;
+
+        //Takes string and separates data using comma delimiter
         string tempString;
         stringstream inputString(line);
         getline(inputString, FirstName, ',');
         getline(inputString, LastName, ',');
         getline(inputString, UserName, ',');
         getline(inputString, Password, ',');
-        cout << FirstName << " " << LastName << " " << UserName << " " << Password;
-        // getting IsAdmin
+        // getting IsAdmin convert string to integer val
         getline(inputString, tempString, ',');
         IsAdmin = stoi(tempString.c_str());
+
+        //Load data into vector using structure constructor
         userInformation user(FirstName, LastName, UserName, Password, IsAdmin);
         users.push_back(user);
         line = "";
