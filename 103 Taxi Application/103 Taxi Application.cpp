@@ -5,10 +5,45 @@
 #include <vector>
 #include <iomanip>
 
-//Headers
-//#include "UserFunctions.h"
-
 using namespace std;
+
+struct bookingInformation {
+
+    //Structure variables
+    string CustFirstName;
+    string CustLastName;
+    string BookingDate[3] = { "d","m","y" };
+    string CustAddress[4] = { "street number + name", "suburb", "town/city", "postcode" };
+    string PickupAddress[4] = { "street number + name", "suburb", "town/city", "postcode" };
+    string DropoffAddress[4] = { "street number + name", "suburb", "town/city", "postcode" };
+    int DistanceBAddresses;
+    double TripCost;
+
+    //Constructor
+    bookingInformation
+    (   string CustFirstName,
+        string CustLastName,
+        string BookingDate, //Test array
+        //string CustAddress[4],
+        //string PickupAddress[4],
+        //string DropoffAddress[4],
+        int DistanceBAddresses,
+        double TripCost) 
+    {
+        this->CustFirstName = CustFirstName; 
+        this->CustLastName = CustLastName;
+        BookingDate = BookingDate;
+        //this->CustAddress = CustAddress;
+        //this->PickupAddress = PickupAddress;
+        //this->DropoffAddress[4] = DropoffAddress[4];
+        this->DistanceBAddresses = DistanceBAddresses;
+        this->TripCost = TripCost;
+    }
+
+};
+
+double costPerKm = 1.90;
+
 
 struct userInformation
 {
@@ -41,7 +76,6 @@ void WriteCSV(string, vector<userInformation>&);
 //Misc
 void Line(int, char, bool); //length, character, dropline after called t/f
 
-
 //Menus
 void DisplayMainMenu();
 void DisplayUserMenu();
@@ -62,10 +96,18 @@ void ViewPastBookings();
 
 int main()
 {
-    // Load in existing user data from users.csv at start of program
+    // Load in existing user data at program start into vector structures
+    //------------------------------------------------------------------------------------
 
-    vector<userInformation> users;
-    LoadCSV("users.csv", users); //"users.csv" is the file location so just adjust this as required. 
+    vector<userInformation> users; //Create vector
+    LoadCSV("users.csv", users); // Load users 
+
+    //vector<bookingInformation>
+
+
+
+    //------------------------------------------------------------------------------------
+
 
 
     // Display login screen
