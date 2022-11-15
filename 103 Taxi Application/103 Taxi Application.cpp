@@ -5,9 +5,6 @@
 #include <vector>
 #include <iomanip>
 
-//Headers
-//#include "UserFunctions.h"
-
 using namespace std;
 
 struct userInformation
@@ -73,6 +70,8 @@ int main()
     // init variables for input
     string username;
     string password;
+
+    //Loop three attempts
 
     for (int i = 0; i < 3; i++)
     {
