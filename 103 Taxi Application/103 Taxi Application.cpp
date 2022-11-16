@@ -7,6 +7,27 @@
 
 using namespace std;
 
+//----------------------------------------------------------------------------------------------------------------------------
+//Structs 
+struct userInformation
+{
+    //Structure variables
+    string FirstName;
+    string LastName;
+    string UserName;
+    string Password;
+    int IsAdmin;
+
+    //Constructor
+    userInformation(string FirstName, string LastName, string UserName, string Password, int IsAdmin) {
+        this->FirstName = FirstName; //References original var names so you don't need two sets of names
+        this->LastName = LastName;
+        this->UserName = UserName;
+        this->Password = Password;
+        this->IsAdmin = IsAdmin;
+    }
+};
+
 struct bookingInformation {
 
     //Name
@@ -16,11 +37,6 @@ struct bookingInformation {
     int BDateDay;
     int BDateMonth;
     int BDateYear;
-    //Customer Address
-    string CustAddressStreet;
-    string CustAddressSuburb;
-    string CustAddressTownCity;
-    int CustAddressPcode;
     //Pickup Address
     string PickupAddressStreet;
     string PickupAddressSuburb;
@@ -37,7 +53,7 @@ struct bookingInformation {
 
     //Constructor
     bookingInformation
-    (   
+    (
         //Name
         string CustFirstName,
         string CustLastName,
@@ -45,11 +61,6 @@ struct bookingInformation {
         int BDateDay,
         int BDateMonth,
         int BDateYear,
-        //Customer Address
-        string CustAddressStreet,
-        string CustAddressSuburb,
-        string CustAddressTownCity,
-        int CustAddressPcode,
         //Pickup Address
         string PickupAddressStreet,
         string PickupAddressSuburb,
@@ -72,11 +83,6 @@ struct bookingInformation {
         this->BDateMonth = BDateMonth;
         this->BDateYear = BDateMonth;
 
-        this->CustAddressStreet = CustAddressStreet;
-        this->CustAddressSuburb = CustAddressSuburb;
-        this->CustAddressTownCity = CustAddressTownCity;
-        this->CustAddressPcode = CustAddressPcode;
-
         this->PickupAddressStreet = PickupAddressStreet;
         this->PickupAddressSuburb = PickupAddressSuburb;
         this->PickupAddressTownCity = PickupAddressTownCity;
@@ -94,35 +100,20 @@ struct bookingInformation {
 
 };
 
-double costPerKm = 1.90;
-
-
-struct userInformation
-{
-    //Structure variables
-    string FirstName;
-    string LastName;
-    string UserName;
-    string Password;
-    int IsAdmin;
-
-    //Constructor
-    userInformation(string FirstName, string LastName, string UserName, string Password, int IsAdmin) {
-        this->FirstName = FirstName; //References original var names so you don't need two sets of names
-        this->LastName = LastName;
-        this->UserName = UserName;
-        this->Password = Password;
-        this->IsAdmin = IsAdmin;
-    }
-};
+//----------------------------------------------------------------------------------------------------------------------------
+//Global variables
 
 bool IsAdminUser = false;
+double costPerKm = 1.90;
 
 //----------------------------------------------------------------------------------------------------------------------------
 //Prototype functions
 
 //Load & write
-void LoadCSV(string, vector<userInformation>&);
+void LoadUsersCSV(vector<userInformation>&, string);
+
+void LoadBookingInfoCSV(vector<bookingInformation>&, string);
+
 void WriteCSV(string, vector<userInformation>&);
 
 //Misc
@@ -152,9 +143,10 @@ int main()
     //------------------------------------------------------------------------------------
 
     vector<userInformation> users; //Create vector
-    LoadCSV("users.csv", users); // Load users 
+    LoadUsersCSV(users, "users.csv"); // Load users 
 
     vector<bookingInformation> bookingInfo; //Create vector
+    LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
 
 
 
@@ -162,9 +154,6 @@ int main()
 
 
     //------------------------------------------------------------------------------------
-
-
-
     // Display login screen
 
     cout << "Taxi Management System " << endl;
@@ -276,7 +265,7 @@ mainmenu:
 
             //Reload users vector contents to reflect any changes
             users.clear();
-            LoadCSV("users.csv", users);
+            LoadUsersCSV(users, "users.csv"); // Load users 
 
             cout << endl;
             Line(60, '-', true);
@@ -302,7 +291,7 @@ mainmenu:
 
             //Reload users vector contents to reflect any changes
             users.clear();
-            LoadCSV("users.csv", users);
+            LoadUsersCSV(users, "users.csv"); // Load users 
 
             int vieworremoveexistingusersSelection;
             cin >> vieworremoveexistingusersSelection;
@@ -338,7 +327,6 @@ void DisplayBookingMenu() {
     cout << endl;
     cout << "Enter selection : ";
 }
-
 
 void BookRide() {
 
@@ -492,11 +480,13 @@ void DisplayMainMenu() {
 //Functions
 
 //Load CSV function
-void LoadCSV(string filename, vector<userInformation>& users) { //Use reference so it doesn't make a copy of the vector and edits the original
+//Use reference so it doesn't make a copy of the vector and edits the original
+void LoadUsersCSV(vector<userInformation>& users,string filename) {
 
     ifstream inputFile;
     inputFile.open(filename);
     string line = "";
+
     while (getline(inputFile, line))
     {
         //Init vars to load data into
@@ -521,10 +511,110 @@ void LoadCSV(string filename, vector<userInformation>& users) { //Use reference 
         userInformation user(FirstName, LastName, UserName, Password, IsAdmin);
         users.push_back(user);
         line = "";
-    }
+    } 
 }
 
-//Write CSV function
+
+
+void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename) {
+
+    ifstream inputFile;
+    inputFile.open(filename);
+    string line = "";
+
+        while (getline(inputFile, line))
+        {
+            string tempString = "";
+
+            //Init vars to load data into
+            //Name
+            string CustFirstName;
+            string CustLastName;
+            //Date
+            int BDateDay;
+            int BDateMonth;
+            int BDateYear;
+            //Pickup Address
+            string PickupAddressStreet;
+            string PickupAddressSuburb;
+            string PickupAddressTownCity;
+            int PickupAddressPcode;
+            //Dropoff Address
+            string DropAddressStreet;
+            string DropAddressSuburb;
+            string DropAddressTownCity;
+            int DropAddressPcode;
+            //Distance + Cost
+            int DistanceBAddresses;
+            double TripCost;
+
+            //Takes string and separates data using comma delimiter
+            string tempString;
+            stringstream inputString(line);
+            //Name
+            getline(inputString, CustFirstName, ',');
+            getline(inputString, CustLastName, ',');
+            //Date
+            getline(inputString, tempString, ',');
+            BDateDay = stoi(tempString.c_str());
+            getline(inputString, tempString, ',');
+            BDateMonth = stoi(tempString.c_str());
+            getline(inputString, tempString, ',');
+            BDateYear = stoi(tempString.c_str());
+            //Pickup Address
+            getline(inputString, PickupAddressStreet, ',');
+            getline(inputString, PickupAddressSuburb, ',');
+            getline(inputString, PickupAddressTownCity, ',');
+            getline(inputString, tempString, ',');
+            PickupAddressPcode = stoi(tempString.c_str());
+            //Dropoff Address
+            getline(inputString, DropAddressStreet, ',');
+            getline(inputString, DropAddressSuburb, ',');
+            getline(inputString, DropAddressTownCity, ',');
+            getline(inputString, tempString, ',');
+            DropAddressPcode = stoi(tempString.c_str());
+            //Distance + Cost
+            getline(inputString, tempString, ',');
+            DistanceBAddresses = stoi(tempString.c_str());
+            getline(inputString, tempString, ',');
+            TripCost = stoi(tempString.c_str());
+
+
+            //Load data into vector using structure constructor
+            bookingInformation bInfo(
+                //Name
+                string CustFirstName,
+                string CustLastName,
+                //Date
+                int BDateDay,
+                int BDateMonth,
+                int BDateYear,
+                //Pickup Address
+                string PickupAddressStreet,
+                string PickupAddressSuburb,
+                string PickupAddressTownCity,
+                int PickupAddressPcode,
+                //Dropoff Address
+                string DropAddressStreet,
+                string DropAddressSuburb,
+                string DropAddressTownCity,
+                int DropAddressPcode,
+                //Distance + Cost
+                int DistanceBAddresses,
+                double TripCost
+            );
+
+
+            bookingInfo.push_back(bInfo);
+            line = "";
+        }
+
+    }
+
+
+
+
+//Write CSV function - Need to update to use same switch case for directing information
 void WriteCSV(string filename, vector<userInformation>& users)
 {
     int i = 0; //Starts at vector index of first driver
