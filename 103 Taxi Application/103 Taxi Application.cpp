@@ -33,68 +33,68 @@ struct bookingInformation {
     //Name
     string CustFirstName;
     string CustLastName;
-    ////Date
-    //int BDateDay;
-    //int BDateMonth;
-    //int BDateYear;
-    ////Pickup Address
-    //string PickupAddressStreet;
-    //string PickupAddressSuburb;
-    //string PickupAddressTownCity;
-    //int PickupAddressPcode;
-    ////Dropoff Address
-    //string DropAddressStreet;
-    //string DropAddressSuburb;
-    //string DropAddressTownCity;
-    //int DropAddressPcode;
-    ////Distance + Cost
-    //int DistanceBAddresses;
-    //double TripCost;
+    //Date
+    int BDateDay;
+    int BDateMonth;
+    int BDateYear;
+    //Pickup Address
+    string PickupAddressStreet;
+    string PickupAddressSuburb;
+    string PickupAddressTownCity;
+    int PickupAddressPcode;
+    //Dropoff Address
+    string DropAddressStreet;
+    string DropAddressSuburb;
+    string DropAddressTownCity;
+    int DropAddressPcode;
+    //Distance + Cost
+    int DistanceBAddresses;
+    double TripCost;
 
     //Constructor
     bookingInformation
     (
         //Name
         string CustFirstName,
-        string CustLastName
-        ////Date
-        //int BDateDay,
-        //int BDateMonth,
-        //int BDateYear,
-        ////Pickup Address
-        //string PickupAddressStreet,
-        //string PickupAddressSuburb,
-        //string PickupAddressTownCity,
-        //int PickupAddressPcode,
-        ////Dropoff Address
-        //string DropAddressStreet,
-        //string DropAddressSuburb,
-        //string DropAddressTownCity,
-        //int DropAddressPcode,
-        ////Distance + Cost
-        //int DistanceBAddresses,
-        //double TripCost
+        string CustLastName,
+        //Date
+        int BDateDay,
+        int BDateMonth,
+        int BDateYear,
+        //Pickup Address
+        string PickupAddressStreet,
+        string PickupAddressSuburb,
+        string PickupAddressTownCity,
+        int PickupAddressPcode,
+        //Dropoff Address
+        string DropAddressStreet,
+        string DropAddressSuburb,
+        string DropAddressTownCity,
+        int DropAddressPcode,
+        //Distance + Cost
+        int DistanceBAddresses,
+        double TripCost
     )
     {
         this->CustFirstName = CustFirstName;
         this->CustLastName = CustLastName;
 
-        //this->BDateDay = BDateDay;
-        //this->BDateMonth = BDateMonth;
-        //this->BDateYear = BDateMonth;
+        this->BDateDay = BDateDay;
+        this->BDateMonth = BDateMonth;
+        this->BDateYear = BDateMonth;
 
-        //this->PickupAddressStreet = PickupAddressStreet;
-        //this->PickupAddressSuburb = PickupAddressSuburb;
-        //this->PickupAddressTownCity = PickupAddressTownCity;
-        //this->PickupAddressPcode = PickupAddressPcode;
+        this->PickupAddressStreet = PickupAddressStreet;
+        this->PickupAddressSuburb = PickupAddressSuburb;
+        this->PickupAddressTownCity = PickupAddressTownCity;
+        this->PickupAddressPcode = PickupAddressPcode;
 
-        //this->DropAddressStreet = DropAddressStreet;
-        //this->DropAddressSuburb = DropAddressSuburb;
-        //this->DropAddressTownCity = DropAddressTownCity;
-        //this->DropAddressPcode = DropAddressPcode;
+        this->DropAddressStreet = DropAddressStreet;
+        this->DropAddressSuburb = DropAddressSuburb;
+        this->DropAddressTownCity = DropAddressTownCity;
+        this->DropAddressPcode = DropAddressPcode;
 
-        //this->DistanceBAddresses = DistanceBAddresses;
-        //this->TripCost = TripCost;
+        this->DistanceBAddresses = DistanceBAddresses;
+        this->TripCost = TripCost;
     }
 };
 
@@ -143,8 +143,8 @@ int main()
     vector<userInformation> users; //Create vector
     LoadUsersCSV(users, "users.csv"); // Load users 
 
-    vector<bookingInformation> bookingInfo; //Create vector
-    LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
+    //vector<bookingInformation> bookingInfo; //Create vector
+    //LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
 
 
 
@@ -513,7 +513,7 @@ void LoadUsersCSV(vector<userInformation>& users,string filename) {
 }
 
 
-//Need to debug
+
 void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename) {
 
     ifstream inputFile;
@@ -522,29 +522,28 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
 
         while (getline(inputFile, line))
         {
-            string tempString = "";
 
             //Init vars to load data into
             //Name
             string CustFirstName;
             string CustLastName;
-            ////Date
-            //int BDateDay;
-            //int BDateMonth;
-            //int BDateYear;
-            ////Pickup Address
-            //string PickupAddressStreet;
-            //string PickupAddressSuburb;
-            //string PickupAddressTownCity;
-            //int PickupAddressPcode;
-            ////Dropoff Address
-            //string DropAddressStreet;
-            //string DropAddressSuburb;
-            //string DropAddressTownCity;
-            //int DropAddressPcode;
-            ////Distance + Cost
-            //int DistanceBAddresses;
-            //double TripCost;
+            //Date
+            int BDateDay;
+            int BDateMonth;
+            int BDateYear;
+            //Pickup Address
+            string PickupAddressStreet;
+            string PickupAddressSuburb;
+            string PickupAddressTownCity;
+            int PickupAddressPcode;
+            //Dropoff Address
+            string DropAddressStreet;
+            string DropAddressSuburb;
+            string DropAddressTownCity;
+            int DropAddressPcode;
+            //Distance + Cost
+            int DistanceBAddresses;
+            double TripCost;
 
             //Takes string and separates data using comma delimiter
             string tempString;
@@ -552,54 +551,54 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
             //Name
             getline(inputString, CustFirstName, ',');
             getline(inputString, CustLastName, ',');
-            ////Date
-            //getline(inputString, tempString, ',');
-            //BDateDay = stoi(tempString.c_str());
-            //getline(inputString, tempString, ',');
-            //BDateMonth = stoi(tempString.c_str());
-            //getline(inputString, tempString, ',');
-            //BDateYear = stoi(tempString.c_str());
-            ////Pickup Address
-            //getline(inputString, PickupAddressStreet, ',');
-            //getline(inputString, PickupAddressSuburb, ',');
-            //getline(inputString, PickupAddressTownCity, ',');
-            //getline(inputString, tempString, ',');
-            //PickupAddressPcode = stoi(tempString.c_str());
-            ////Dropoff Address
-            //getline(inputString, DropAddressStreet, ',');
-            //getline(inputString, DropAddressSuburb, ',');
-            //getline(inputString, DropAddressTownCity, ',');
-            //getline(inputString, tempString, ',');
-            //DropAddressPcode = stoi(tempString.c_str());
-            ////Distance + Cost
-            //getline(inputString, tempString, ',');
-            //DistanceBAddresses = stoi(tempString.c_str());
-            //getline(inputString, tempString, ',');
-            //TripCost = stoi(tempString.c_str());
+            //Date
+            getline(inputString, tempString, ',');
+            BDateDay = stoi(tempString.c_str());
+            getline(inputString, tempString, ',');
+            BDateMonth = stoi(tempString.c_str());
+            getline(inputString, tempString, ',');
+            BDateYear = stoi(tempString.c_str());
+            //Pickup Address
+            getline(inputString, PickupAddressStreet, ',');
+            getline(inputString, PickupAddressSuburb, ',');
+            getline(inputString, PickupAddressTownCity, ',');
+            getline(inputString, tempString, ',');
+            PickupAddressPcode = stoi(tempString.c_str());
+            //Dropoff Address
+            getline(inputString, DropAddressStreet, ',');
+            getline(inputString, DropAddressSuburb, ',');
+            getline(inputString, DropAddressTownCity, ',');
+            getline(inputString, tempString, ',');
+            DropAddressPcode = stoi(tempString.c_str());
+            //Distance + Cost
+            getline(inputString, tempString, ',');
+            DistanceBAddresses = stoi(tempString.c_str());
+            getline(inputString, tempString, ',');
+            TripCost = stoi(tempString.c_str());
 
 
             //Load data into vector using structure constructor
             bookingInformation bInfo(
                 //Name
-                string CustFirstName,
-                string CustLastName
-                ////Date
-                //int BDateDay,
-                //int BDateMonth,
-                //int BDateYear,
-                ////Pickup Address
-                //string PickupAddressStreet,
-                //string PickupAddressSuburb,
-                //string PickupAddressTownCity,
-                //int PickupAddressPcode,
-                ////Dropoff Address
-                //string DropAddressStreet,
-                //string DropAddressSuburb,
-                //string DropAddressTownCity,
-                //int DropAddressPcode,
-                ////Distance + Cost
-                //int DistanceBAddresses,
-                //double TripCost
+                CustFirstName,
+                CustLastName,
+                //Date
+                BDateDay,
+                BDateMonth,
+                BDateYear,
+                //Pickup Address
+                PickupAddressStreet,
+                PickupAddressSuburb,
+                PickupAddressTownCity,
+                PickupAddressPcode,
+                //Dropoff Address
+                DropAddressStreet,
+                DropAddressSuburb,
+                DropAddressTownCity,
+                DropAddressPcode,
+                //Distance + Cost
+                DistanceBAddresses,
+                TripCost
             );
 
 
