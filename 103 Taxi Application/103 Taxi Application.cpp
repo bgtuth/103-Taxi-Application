@@ -3,7 +3,9 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <iomanip>
+#include <iomanip> //formatting
+#include <ctime>; //date
+#pragma warning(disable:4996) //disable system warning for ctime library
 
 using namespace std;
 
@@ -128,7 +130,7 @@ void ViewExistingUser(vector<userInformation>&);
 void RemoveUser(vector<userInformation>&);
 
 //Book taxi functions
-void BookRide();
+void BookRide(vector<bookingInformation>&);
 void ViewPastBookings();
 
 
@@ -145,10 +147,6 @@ int main()
 
     vector<bookingInformation> bookingInfo; //Create vector
     LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
-
-
-
-
 
 
     //------------------------------------------------------------------------------------
@@ -236,7 +234,7 @@ mainmenu:
         switch (taxiBookingMenu) {
         case 1:
             system("CLS");
-            BookRide();
+            BookRide(bookingInfo);
             break;
         case 2:
             ViewPastBookings();
@@ -329,7 +327,93 @@ void DisplayBookingMenu() {
     cout << "Enter selection : ";
 }
 
-void BookRide() {
+void BookRide(vector<bookingInformation>& bookingInfo) {
+
+    //Init vars to load data into
+    //Name
+    string CustFirstName;
+    string CustLastName;
+    //Date
+    int BDateDay;
+    int BDateMonth;
+    int BDateYear;
+    //Pickup Address
+    string PickupAddressStreet;
+    string PickupAddressSuburb;
+    string PickupAddressTownCity;
+    int PickupAddressPcode;
+    //Dropoff Address
+    string DropAddressStreet;
+    string DropAddressSuburb;
+    string DropAddressTownCity;
+    int DropAddressPcode;
+    //Distance + Cost
+    int DistanceBAddresses;
+    double TripCost;
+
+
+    //Display booking screen - enter new customer
+    cout << endl;
+    cout << "Book taxi for customer" << endl;
+    Line(60, '=', true);
+    cout << endl;
+
+    cout << "Enter new customer\n";
+    Line(60, '-', true);
+    cout << "Name\n";
+    cout << "Enter person's first name: ";
+    cin >> CustFirstName;
+    cout << "Enter person's last name: ";
+    cin >> CustLastName;
+    cout << endl;
+    cout << "Customer added to database!\n";
+    Line(60, '-', true);
+
+
+    //Date using ctime library
+    time_t curr_time;
+    curr_time = time(NULL);
+
+    char date[20];
+    char day[20];
+    char month[20];
+    char year[20];
+
+    //Using strftime to format output
+    time_t t = time(0);
+    strftime(date, 20, "%d/%m/%Y", localtime(&t)); 
+    strftime(day, 20, "%d", localtime(&t));
+    strftime(month, 20, "%m", localtime(&t));
+    strftime(year, 20, "%Y", localtime(&t));
+
+    //Char array to string
+    string tempD = day; 
+    string tempM = month;
+    string tempY = year;
+
+    //String to integer
+    BDateDay = stoi(tempD.c_str());
+    BDateMonth = stoi(tempD.c_str());
+    BDateYear = stoi(tempD.c_str());
+
+    //int selectDateMenu;
+
+    //cout << "Select one of the following options:" << endl;
+    //cout << "1) Book today, " << date << endl;
+    //cout << "2) Select another date" << endl;
+    //cin >> selectDateMenu;
+
+    //switch (selectDateMenu) {
+    //case 1:
+    //    vector<bookingInformation> addTodaysDate;
+    //    newuser.push_back(userInformation(newuserFirstName, newuserLastName, newuserUserName, newuserPassword, newuserAdminRights));
+    //    break;
+
+    //}
+
+
+    //cout << "Enter pick up address\n";
+    //cout << "Enter your account password: ";
 
 }
 
@@ -398,6 +482,7 @@ void CreateNewUser() {
 
 void ViewExistingUser(vector<userInformation>& users) {
     // Display all users
+    cout << "Current user database contents\n";
     Line(60, '-', true);
     for (int i = 0; i < users.size(); i++)
     {
@@ -621,7 +706,6 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
 
     }
 
-
 //Write CSV function - Need to update to use same switch case for directing information
 
 void WriteUserCSV(vector<userInformation>& users, string filename )
@@ -681,9 +765,6 @@ void WriteBookTaxiCSV(vector<bookingInformation>& bookingInfo, string filename )
 
 
 }
-
-
-
 
 //----------------------------------------------------------------------------------------------------------------------------
 //Code snippets
