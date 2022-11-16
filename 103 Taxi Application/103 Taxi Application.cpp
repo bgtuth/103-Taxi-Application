@@ -235,10 +235,13 @@ mainmenu:
         case 1:
             system("CLS");
             BookRide(bookingInfo);
+            break;
         case 2:
             system("CLS");
             ViewPastBookings();
+            break;
         }
+        break;
 
 
     case 4:
@@ -281,7 +284,6 @@ mainmenu:
             case 2:
                 goto mainmenu;
             }
-            break;
 
         case 2:
             //View existing users
@@ -306,6 +308,7 @@ mainmenu:
                 goto mainmenu;
             }
         }
+        break;
     }
 
 }
@@ -406,6 +409,7 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
         BDateMonth = stoi(tempM.c_str());
         BDateYear = stoi(tempY.c_str());
         cout << "Today's date added!\n";
+        break;
     case 2:
         cout << "Enter day (dd): " << endl;
         cin >> BDateDay;
@@ -414,13 +418,13 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
         cout << "Enter year (yy): " << endl;
         cin >> BDateYear;
         cout << "Selected date added!\n";
+        break;
     }
 
     //Add pickup & dropoff address
     cout << endl;
     cout << "Add addresses\n";
     Line(60, '-', true);
-    cout << endl;
 
     //Pickup Address
     cout << "Pickup address\n";
@@ -518,22 +522,23 @@ void CreateNewUser(vector<userInformation>& users) {
     userInformation newuser(newuserFirstName, newuserLastName, newuserUserName, newuserPassword, newuserAdminRights);
     users.push_back(newuser);
 
-    // Return data to test if the user data has been recorded ok.
-    cout << users[0].FirstName << "," << users[0].LastName << "," << users[0].UserName << "," << users[0].Password << "," << users[0].IsAdmin << endl;
-
-    WriteUserCSV(users, "users.csv");
-
-    //// Save to file system.
-    //ofstream appfile;
-    //appfile.open("users.csv", ios::app);
-    //appfile << newuser[0].FirstName << "," << newuser[0].LastName << "," << newuser[0].UserName << "," << newuser[0].Password << "," << newuser[0].IsAdmin << endl;
-    //appfile.close();
-
+    // Return data to test if the user data has been recorded at back of vector
     cout << endl;
     cout << "New user account created!";
     cout << endl;
-    cout << "Name: " << newuserFirstName << " " << newuserLastName << endl;
-    cout << "Username: " << newuserUserName << "   Password: " << newuserPassword << endl;
+    cout << "Name: " << users.back().FirstName << " " << users.back().LastName << endl;
+    cout << "Username: " << users.back().UserName << "   Password: " << users.back().Password;
+
+    if (users.back().IsAdmin == true) {
+        cout << "   Admin account: true" << endl;
+    }
+    else {
+        cout << "   Admin account: false" << endl;
+    }
+
+    //Update csv
+    WriteUserCSV(users, "users.csv");
+
 }
 
 void ViewExistingUser(vector<userInformation>& users) {
