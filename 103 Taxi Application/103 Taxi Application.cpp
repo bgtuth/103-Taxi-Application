@@ -336,9 +336,9 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
     string CustFirstName;
     string CustLastName;
     //Date
-    int BDateDay;
-    int BDateMonth;
-    int BDateYear;
+    int BDateDay = 0;
+    int BDateMonth = 0;
+    int BDateYear = 0;
     //Pickup Address
     string PickupAddressStreet;
     string PickupAddressSuburb;
@@ -464,14 +464,34 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
     int max = 20 + 1; //Add +1 to include 20 in range
     DistanceBAddresses = rand() % (min - max) + min;
 
+    TripCost = costPerKm * DistanceBAddresses;
+
     cout << "Distance calculated between addresses = " << DistanceBAddresses << "km" << endl;
     cout << "Cost per Km = $" << costPerKm << endl;
-    cout << "Taxi fare cost = $" << costPerKm * DistanceBAddresses << endl;
+    cout << "Taxi fare cost = $" << TripCost << endl;
    
+    // Push new user into vector
+    bookingInformation newbooking (
+    CustFirstName,
+    CustLastName,
+    BDateDay,
+    BDateMonth,
+    BDateYear,
+    PickupAddressStreet,
+    PickupAddressSuburb,
+    PickupAddressTownCity,
+    PickupAddressPcode,
+    DropAddressStreet,
+    DropAddressSuburb,
+    DropAddressTownCity,
+    DropAddressPcode,
+    DistanceBAddresses,
+    TripCost);
 
-    ////Push information to vector
-    //vector<bookinginformation> addtodaysdate;
-    //addtodaysdate.push_back(bookinginformation());
+    bookingInfo.push_back(newbooking);
+
+    //Update CSV
+    WriteBookTaxiCSV(bookingInfo, "bookinginfo.csv");
 
 }
 
