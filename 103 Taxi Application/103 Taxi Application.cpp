@@ -9,35 +9,87 @@ using namespace std;
 
 struct bookingInformation {
 
-    //Structure variables
+    //Name
     string CustFirstName;
     string CustLastName;
-    string BookingDate[3] = { "d","m","y" };
-    string CustAddress[4] = { "street number + name", "suburb", "town/city", "postcode" };
-    string PickupAddress[4] = { "street number + name", "suburb", "town/city", "postcode" };
-    string DropoffAddress[4] = { "street number + name", "suburb", "town/city", "postcode" };
+    //Date
+    int BDateDay;
+    int BDateMonth;
+    int BDateYear;
+    //Customer Address
+    string CustAddressStreet;
+    string CustAddressSuburb;
+    string CustAddressTownCity;
+    int CustAddressPcode;
+    //Pickup Address
+    string PickupAddressStreet;
+    string PickupAddressSuburb;
+    string PickupAddressTownCity;
+    int PickupAddressPcode;
+    //Dropoff Address
+    string DropAddressStreet;
+    string DropAddressSuburb;
+    string DropAddressTownCity;
+    int DropAddressPcode;
+    //Distance + Cost
     int DistanceBAddresses;
     double TripCost;
 
     //Constructor
     bookingInformation
-    (   string CustFirstName,
+    (   
+        //Name
+        string CustFirstName,
         string CustLastName,
-        string BookingDate, //Test array
-        //string CustAddress[4],
-        //string PickupAddress[4],
-        //string DropoffAddress[4],
+        //Date
+        int BDateDay,
+        int BDateMonth,
+        int BDateYear,
+        //Customer Address
+        string CustAddressStreet,
+        string CustAddressSuburb,
+        string CustAddressTownCity,
+        int CustAddressPcode,
+        //Pickup Address
+        string PickupAddressStreet,
+        string PickupAddressSuburb,
+        string PickupAddressTownCity,
+        int PickupAddressPcode,
+        //Dropoff Address
+        string DropAddressStreet,
+        string DropAddressSuburb,
+        string DropAddressTownCity,
+        int DropAddressPcode,
+        //Distance + Cost
         int DistanceBAddresses,
-        double TripCost) 
+        double TripCost
+    )
     {
-        this->CustFirstName = CustFirstName; 
+        this->CustFirstName = CustFirstName;
         this->CustLastName = CustLastName;
-        BookingDate = BookingDate;
-        //this->CustAddress = CustAddress;
-        //this->PickupAddress = PickupAddress;
-        //this->DropoffAddress[4] = DropoffAddress[4];
+
+        this->BDateDay = BDateDay;
+        this->BDateMonth = BDateMonth;
+        this->BDateYear = BDateMonth;
+
+        this->CustAddressStreet = CustAddressStreet;
+        this->CustAddressSuburb = CustAddressSuburb;
+        this->CustAddressTownCity = CustAddressTownCity;
+        this->CustAddressPcode = CustAddressPcode;
+
+        this->PickupAddressStreet = PickupAddressStreet;
+        this->PickupAddressSuburb = PickupAddressSuburb;
+        this->PickupAddressTownCity = PickupAddressTownCity;
+        this->PickupAddressPcode = PickupAddressPcode;
+
+        this->DropAddressStreet = DropAddressStreet;
+        this->DropAddressSuburb = DropAddressSuburb;
+        this->DropAddressTownCity = DropAddressTownCity;
+        this->DropAddressPcode = DropAddressPcode;
+
         this->DistanceBAddresses = DistanceBAddresses;
         this->TripCost = TripCost;
+
     }
 
 };
@@ -102,7 +154,10 @@ int main()
     vector<userInformation> users; //Create vector
     LoadCSV("users.csv", users); // Load users 
 
-    //vector<bookingInformation>
+    vector<bookingInformation> bookingInfo; //Create vector
+
+
+
 
 
 
@@ -495,3 +550,15 @@ void Line(int nChar, char c, bool dropline) {
     }
 
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------------
+//Code snippets
+
+//Testing member creation
+//string FirstName = "test";
+//string LastName = "test";
+//string UserName = "test";
+//string Password = "test";
+//int IsAdmin = 0;
+//userInformation user(FirstName, LastName, UserName, Password, IsAdmin);
