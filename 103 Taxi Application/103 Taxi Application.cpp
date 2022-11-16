@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <iomanip> //formatting
-#include <ctime>; //date
+#include <ctime>; //date & random number
 #pragma warning(disable:4996) //disable system warning for ctime library
 
 using namespace std;
@@ -387,33 +387,88 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
     strftime(year, 20, "%Y", localtime(&t));
 
     //Char array to string
-    string tempD = day; 
+    string tempD = day;
     string tempM = month;
     string tempY = year;
 
-    //String to integer
-    BDateDay = stoi(tempD.c_str());
-    BDateMonth = stoi(tempD.c_str());
-    BDateYear = stoi(tempD.c_str());
+    int selectDateMenu;
 
-    //int selectDateMenu;
+    //Date submenu
+    cout << "Select one of the following options:" << endl;
+    cout << "1) Book today, " << date << endl;
+    cout << "2) Select another date" << endl;
+    cin >> selectDateMenu;
+    cout << endl;
 
-    //cout << "Select one of the following options:" << endl;
-    //cout << "1) Book today, " << date << endl;
-    //cout << "2) Select another date" << endl;
-    //cin >> selectDateMenu;
+    switch (selectDateMenu) {
+    case 1:
+        //String to integer - update var
+        BDateDay = stoi(tempD.c_str());
+        BDateMonth = stoi(tempM.c_str());
+        BDateYear = stoi(tempY.c_str());
+        cout << "Today's date added!\n";
+    case 2:
+        cout << "Enter day (dd): " << endl;
+        cin >> BDateDay;
+        cout << "Enter month (mm): " << endl;
+        cin >> BDateMonth;
+        cout << "Enter year (yy): " << endl;
+        cin >> BDateYear;
+        cout << "Selected date added!\n";
+    }
 
-    //switch (selectDateMenu) {
-    //case 1:
-    //    vector<bookingInformation> addTodaysDate;
-    //    newuser.push_back(userInformation(newuserFirstName, newuserLastName, newuserUserName, newuserPassword, newuserAdminRights));
-    //    break;
+    //Add pickup & dropoff address
+    cout << endl;
+    cout << "Add addresses\n";
+    Line(60, '-', true);
+    cout << endl;
 
-    //}
+    //Pickup Address
+    cout << "Pickup address\n";
+    cout << "Enter address number/street) : ";
+    cin >> PickupAddressStreet;
+    cout << "Enter suburb : ";
+    cin >> PickupAddressSuburb;
+    cout << "Enter town/city : ";
+    cin >> PickupAddressTownCity;
+    cout << "Enter Postcode: ";
+    cin >> PickupAddressPcode;
+
+    //Dropoff Address
+    cout << "Dropoff address\n";
+    cout << "Enter address number/street) : ";
+    cin >> DropAddressStreet;
+    cout << "Enter suburb : ";
+    cin >> DropAddressSuburb;
+    cout << "Enter town/city : ";
+    cin >> DropAddressTownCity;
+    cout << "Enter Postcode: ";
+    cin >> DropAddressPcode;
+    cout << endl;
+
+    cout << "Addresses added!\n";
+
+    cout << endl;
+    cout << "Calculate Taxi Fare\n";
+    Line(60, '-', true);
+    cout << endl;
+
+    //Generate random distance between 1 - 20kms
+
+    srand(time(NULL)); //Reset number seed
+    //Set up the boundary
+    int min = 1;
+    int max = 20 + 1; //Add +1 to include 20 in range
+    DistanceBAddresses = rand() % (min - max) + min;
+
+    cout << "Distance between addresses ";
+   
 
 
-    //cout << "Enter pick up address\n";
-    //cout << "Enter your account password: ";
+
+    ////Push information to vector
+    //vector<bookingInformation> addTodaysDate;
+    //addTodaysDate.push_back(bookingInformation());
 
 }
 
