@@ -109,10 +109,10 @@ double costPerKm = 1.90;
 
 //Load & write
 void LoadUsersCSV(vector<userInformation>&, string);
+
 void LoadBookingInfoCSV(vector<bookingInformation>&, string);
 
-void WriteUserCSV(vector<userInformation>&, string);
-void WriteBookTaxiCSV(vector<bookingInformation>&, string);
+void WriteCSV(string, vector<userInformation>&);
 
 //Misc
 void Line(int, char, bool); //length, character, dropline after called t/f
@@ -235,11 +235,8 @@ mainmenu:
 
         switch (taxiBookingMenu) {
         case 1:
-            system("CLS");
-            BookRide();
             break;
         case 2:
-            ViewPastBookings();
             break;
         }
 
@@ -453,7 +450,7 @@ void RemoveUser(vector<userInformation>& users) {
     // Remove the user. It's as simple as this one line.
     users.erase(users.begin() + userToRemove);
     // Update the CSV file
-    WriteUserCSV( users, "users.csv");
+    WriteCSV("users.csv", users);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -477,23 +474,11 @@ void DisplayMainMenu() {
     cout << "Enter selection : ";
 }
 
-//Draw line
-void Line(int nChar, char c, bool dropline) {
-    for (int i = 1; i <= nChar; i++) {
-        cout << c;
-    }
-    if (dropline == true) {
-        cout << endl;
-    }
-
-}
-
 //----------------------------------------------------------------------------------------------------------------------------
 //Functions
 
-//Load CSV functions
+//Load CSV function
 //Use reference so it doesn't make a copy of the vector and edits the original
-
 void LoadUsersCSV(vector<userInformation>& users,string filename) {
 
     ifstream inputFile;
@@ -526,6 +511,8 @@ void LoadUsersCSV(vector<userInformation>& users,string filename) {
         line = "";
     } 
 }
+
+
 
 void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename) {
 
@@ -587,7 +574,7 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
             getline(inputString, tempString, ',');
             DistanceBAddresses = stoi(tempString.c_str());
             getline(inputString, tempString, ',');
-            TripCost = stod(tempString.c_str()); //stod method for converting to double
+            TripCost = stoi(tempString.c_str());
 
 
             //Load data into vector using structure constructor
@@ -622,9 +609,10 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
     }
 
 
-//Write CSV function - Need to update to use same switch case for directing information
 
-void WriteUserCSV(vector<userInformation>& users, string filename )
+
+//Write CSV function - Need to update to use same switch case for directing information
+void WriteCSV(string filename, vector<userInformation>& users)
 {
     int i = 0; //Starts at vector index of first driver
     ofstream appfile;
@@ -639,50 +627,16 @@ void WriteUserCSV(vector<userInformation>& users, string filename )
     appfile.close();
 }
 
-void WriteBookTaxiCSV(vector<bookingInformation>& bookingInfo, string filename )
-{
-    int i = 0; //Starts at vector index of first driver
-    ofstream appfile;
-    appfile.open(filename, ios::out);
-
-    for (auto itr = bookingInfo.begin(); itr != bookingInfo.end(); itr++) {
-
-        appfile << bookingInfo[i].CustFirstName << "," << bookingInfo[i].CustLastName << "," << bookingInfo[i].BDateDay << "," << bookingInfo[i].BDateMonth << "," << bookingInfo[i].BDateYear << ","
-            << bookingInfo[i].PickupAddressStreet << "," << bookingInfo[i].PickupAddressSuburb << "," << bookingInfo[i].PickupAddressTownCity << "," << bookingInfo[i].PickupAddressPcode << ","
-            << bookingInfo[i].DropAddressStreet << "," << bookingInfo[i].DropAddressSuburb << "," << bookingInfo[i].DropAddressTownCity << bookingInfo[i].DropAddressPcode << "," << bookingInfo[i].DistanceBAddresses << "," << bookingInfo[i].TripCost << endl;
-        i++;
+//Draw line
+void Line(int nChar, char c, bool dropline) {
+    for (int i = 1; i <= nChar; i++) {
+        cout << c;
+    }
+    if (dropline == true) {
+        cout << endl;
     }
 
-    appfile.close();
-
-    //Init vars to load data into
-//Name
-    string CustFirstName;
-    string CustLastName;
-    //Date
-    int BDateDay;
-    int BDateMonth;
-    int BDateYear;
-    //Pickup Address
-    string PickupAddressStreet;
-    string PickupAddressSuburb;
-    string PickupAddressTownCity;
-    int PickupAddressPcode;
-    //Dropoff Address
-    string DropAddressStreet;
-    string DropAddressSuburb;
-    string DropAddressTownCity;
-    int DropAddressPcode;
-    //Distance + Cost
-    int DistanceBAddresses;
-    double TripCost;
-
-
-
-
 }
-
-
 
 
 //----------------------------------------------------------------------------------------------------------------------------
