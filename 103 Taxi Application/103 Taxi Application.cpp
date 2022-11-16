@@ -143,8 +143,8 @@ int main()
     vector<userInformation> users; //Create vector
     LoadUsersCSV(users, "users.csv"); // Load users 
 
-    //vector<bookingInformation> bookingInfo; //Create vector
-    //LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
+    vector<bookingInformation> bookingInfo; //Create vector
+    LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
 
 
 
