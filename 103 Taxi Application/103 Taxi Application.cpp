@@ -125,7 +125,7 @@ void DisplayUserMenu();
 void DisplayBookingMenu();
 
 //User functions
-void CreateNewUser();
+void CreateNewUser(vector<userInformation>&);
 void ViewExistingUser(vector<userInformation>&);
 void RemoveUser(vector<userInformation>&);
 
@@ -235,10 +235,9 @@ mainmenu:
         case 1:
             system("CLS");
             BookRide(bookingInfo);
-            break;
         case 2:
+            system("CLS");
             ViewPastBookings();
-            break;
         }
 
 
@@ -260,7 +259,7 @@ mainmenu:
             //Create new user
 
             system("CLS");
-            CreateNewUser();
+            CreateNewUser(users);
 
             //Reload users vector contents to reflect any changes
             users.clear();
@@ -461,14 +460,14 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
     int max = 20 + 1; //Add +1 to include 20 in range
     DistanceBAddresses = rand() % (min - max) + min;
 
-    cout << "Distance between addresses ";
+    cout << "Distance calculated between addresses = " << DistanceBAddresses << "km" << endl;
+    cout << "Cost per Km = $" << costPerKm << endl;
+    cout << "Taxi fare cost = $" << costPerKm * DistanceBAddresses << endl;
    
 
-
-
     ////Push information to vector
-    //vector<bookingInformation> addTodaysDate;
-    //addTodaysDate.push_back(bookingInformation());
+    //vector<bookinginformation> addtodaysdate;
+    //addtodaysdate.push_back(bookinginformation());
 
 }
 
@@ -490,7 +489,7 @@ void DisplayUserMenu() {
     cout << "Enter selection : ";
 }
 
-void CreateNewUser() {
+void CreateNewUser(vector<userInformation>& users) {
 
     string newuserFirstName;
     string newuserLastName;
@@ -515,18 +514,20 @@ void CreateNewUser() {
     cin >> newuserAdminRights;
     cout << endl;
 
-    // Create the record.
-    vector<userInformation> newuser;
-    newuser.push_back(userInformation(newuserFirstName, newuserLastName, newuserUserName, newuserPassword, newuserAdminRights));
+    // Push new user into vector
+    userInformation newuser(newuserFirstName, newuserLastName, newuserUserName, newuserPassword, newuserAdminRights);
+    users.push_back(newuser);
 
     // Return data to test if the user data has been recorded ok.
-    cout << newuser[0].FirstName << "," << newuser[0].LastName << "," << newuser[0].UserName << "," << newuser[0].Password << "," << newuser[0].IsAdmin << endl;
+    cout << users[0].FirstName << "," << users[0].LastName << "," << users[0].UserName << "," << users[0].Password << "," << users[0].IsAdmin << endl;
 
-    // Save to file system.
-    ofstream appfile;
-    appfile.open("users.csv", ios::app);
-    appfile << newuser[0].FirstName << "," << newuser[0].LastName << "," << newuser[0].UserName << "," << newuser[0].Password << "," << newuser[0].IsAdmin << endl;
-    appfile.close();
+    WriteUserCSV(users, "users.csv");
+
+    //// Save to file system.
+    //ofstream appfile;
+    //appfile.open("users.csv", ios::app);
+    //appfile << newuser[0].FirstName << "," << newuser[0].LastName << "," << newuser[0].UserName << "," << newuser[0].Password << "," << newuser[0].IsAdmin << endl;
+    //appfile.close();
 
     cout << endl;
     cout << "New user account created!";
@@ -765,7 +766,7 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
 
 void WriteUserCSV(vector<userInformation>& users, string filename )
 {
-    int i = 0; //Starts at vector index of first driver
+    int i = 0; //Starts at vector index of first user
     ofstream appfile;
     appfile.open(filename, ios::out);
 
