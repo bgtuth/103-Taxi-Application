@@ -164,6 +164,7 @@ int main()
     string password;
 
     //Check three attempts loop
+    //Loop three attempts
     for (int i = 0; i < 3; i++)
     {
         cout << "Username : ";
