@@ -83,7 +83,7 @@ struct bookingInformation {
 
         this->BDateDay = BDateDay;
         this->BDateMonth = BDateMonth;
-        this->BDateYear = BDateMonth;
+        this->BDateYear = BDateYear;
 
         this->PickupAddressStreet = PickupAddressStreet;
         this->PickupAddressSuburb = PickupAddressSuburb;
@@ -131,7 +131,7 @@ void RemoveUser(vector<userInformation>&);
 
 //Book taxi functions
 void BookRide(vector<bookingInformation>&);
-void ViewPastBookings();
+void ViewPastBookings(vector<bookingInformation>&);
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -152,6 +152,7 @@ int main()
     //------------------------------------------------------------------------------------
     // Display login screen
 
+    cout << endl;
     cout << "Taxi Management System " << endl;
     Line(60, '=', true);
     cout << endl;
@@ -235,11 +236,44 @@ mainmenu:
         case 1:
             system("CLS");
             BookRide(bookingInfo);
-            break;
+
+            Line(60, '-', true);
+            cout << endl;
+            cout << "Select one of the following options:" << endl;
+            cout << "1) Return to previous menu" << endl;
+            cout << "2) Return to main menu" << endl;
+
+            int bookRideMenu;
+            cin >> bookRideMenu;
+
+            switch (bookRideMenu)
+            {
+            case 1:
+                goto booktaximenu;
+            case 2:
+                goto mainmenu;
+            }
+
         case 2:
             system("CLS");
-            ViewPastBookings();
-            break;
+            ViewPastBookings(bookingInfo);
+
+            Line(60, '-', true);
+            cout << endl;
+            cout << "Select one of the following options:" << endl;
+            cout << "1) Return to previous menu" << endl;
+            cout << "2) Return to main menu" << endl;
+
+            cin >> bookRideMenu;
+
+            switch (bookRideMenu)
+            {
+            case 1:
+                goto booktaximenu;
+            case 2:
+                goto mainmenu;
+            }
+
         }
         break;
 
@@ -274,10 +308,10 @@ mainmenu:
             cout << "1) Return to previous menu" << endl;
             cout << "2) Return to main menu" << endl;
 
-            int newuserAccountMenuOptions;
-            cin >> newuserAccountMenuOptions;
+            int newuserAccountMenu;
+            cin >> newuserAccountMenu;
 
-            switch (newuserAccountMenuOptions)
+            switch (newuserAccountMenu)
             {
             case 1:
                 goto usermanagementmenu;
@@ -293,10 +327,17 @@ mainmenu:
             users.clear();
             LoadUsersCSV(users, "users.csv"); // Load users 
 
-            int vieworremoveexistingusersSelection;
-            cin >> vieworremoveexistingusersSelection;
+            Line(60, '-', true);
+            cout << endl;
+            cout << "Select one of the following options:" << endl;
+            cout << "1) Return to previous menu" << endl;
+            cout << "2) Return to main menu" << endl;
+            cout << "3) Remove a user" << endl;
 
-            switch (vieworremoveexistingusersSelection)
+            int viewUserMenu;
+            cin >> viewUserMenu;
+
+            switch (viewUserMenu)
             {
             case 1:
                 goto usermanagementmenu;
@@ -409,6 +450,9 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
         BDateMonth = stoi(tempM.c_str());
         BDateYear = stoi(tempY.c_str());
         cout << "Today's date added!\n";
+
+        cout << BDateDay << BDateMonth << BDateYear << "\n\n";
+
         break;
     case 2:
         cout << "Enter day (dd): " << endl;
@@ -426,28 +470,40 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
     cout << "Add addresses\n";
     Line(60, '-', true);
 
+
+    //Clear datastream before using getline
+    cin.clear();
+    cin.ignore();
+
     //Pickup Address
     cout << "Pickup address\n";
-    cout << "Enter address number/street) : ";
-    cin >> PickupAddressStreet;
-    cout << "Enter suburb : ";
-    cin >> PickupAddressSuburb;
-    cout << "Enter town/city : ";
-    cin >> PickupAddressTownCity;
+    cout << "Enter address number/street): ";
+    getline(cin, PickupAddressStreet);
+    cout << "Enter suburb: ";
+    getline(cin, PickupAddressSuburb);
+    cout << "Enter town/city: ";
+    getline(cin, PickupAddressTownCity);
     cout << "Enter Postcode: ";
     cin >> PickupAddressPcode;
+    cout << endl;
+
+    cin.clear();
+    cin.ignore();
 
     //Dropoff Address
     cout << "Dropoff address\n";
     cout << "Enter address number/street) : ";
-    cin >> DropAddressStreet;
+    getline(cin, DropAddressStreet);
     cout << "Enter suburb : ";
-    cin >> DropAddressSuburb;
+    getline(cin, DropAddressSuburb);
     cout << "Enter town/city : ";
-    cin >> DropAddressTownCity;
+    getline(cin, DropAddressTownCity);
     cout << "Enter Postcode: ";
     cin >> DropAddressPcode;
     cout << endl;
+
+    cin.clear();
+    cin.ignore();
 
     cout << "Addresses added!\n";
 
@@ -495,8 +551,16 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
 
 }
 
-void ViewPastBookings() {
-
+void ViewPastBookings(vector<bookingInformation>& bookingInfo) {
+    ////Display all past bookings 
+    //cout << "Current user database contents\n";
+    //Line(60, '-', true);
+    //for (int i = 0; i < bookingInfo.size(); i++)
+    //{
+    //    cout << "(" << i << ") " << "Trip date : " << bookingInfo[i].BDateDay << "/" << bookingInfo[i].BDateMonth << "/" << bookingInfo[i].BDateYear
+    //        << "Customer name : " << bookingInfo[i].CustFirstName << " " << bookingInfo[i].CustLastName;
+    //    cout << endl;
+    //}
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -579,13 +643,6 @@ void ViewExistingUser(vector<userInformation>& users) {
 
         cout << endl;
     }
-    Line(60, '-', true);
-    cout << endl;
-    cout << "Select one of the following options:" << endl;
-    cout << "1) Return to previous menu" << endl;
-    cout << "2) Return to main menu" << endl;
-    cout << "3) Remove a user" << endl;
-
 }
 
 void RemoveUser(vector<userInformation>& users) {
@@ -627,6 +684,7 @@ void RemoveUser(vector<userInformation>& users) {
 
 void DisplayMainMenu() {
 
+    cout << endl;
     cout << "Main menu" << endl;
     Line(60, '=', true);
     cout << endl;
@@ -814,7 +872,7 @@ void WriteBookTaxiCSV(vector<bookingInformation>& bookingInfo, string filename )
 
         appfile << bookingInfo[i].CustFirstName << "," << bookingInfo[i].CustLastName << "," << bookingInfo[i].BDateDay << "," << bookingInfo[i].BDateMonth << "," << bookingInfo[i].BDateYear << ","
             << bookingInfo[i].PickupAddressStreet << "," << bookingInfo[i].PickupAddressSuburb << "," << bookingInfo[i].PickupAddressTownCity << "," << bookingInfo[i].PickupAddressPcode << ","
-            << bookingInfo[i].DropAddressStreet << "," << bookingInfo[i].DropAddressSuburb << "," << bookingInfo[i].DropAddressTownCity << bookingInfo[i].DropAddressPcode << "," << bookingInfo[i].DistanceBAddresses << "," << bookingInfo[i].TripCost << endl;
+            << bookingInfo[i].DropAddressStreet << "," << bookingInfo[i].DropAddressSuburb << "," << bookingInfo[i].DropAddressTownCity << "," << bookingInfo[i].DropAddressPcode << "," << bookingInfo[i].DistanceBAddresses << "," << bookingInfo[i].TripCost << endl;
         i++;
     }
 
