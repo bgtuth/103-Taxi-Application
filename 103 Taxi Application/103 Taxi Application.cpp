@@ -503,52 +503,31 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
     cout << "Enter the number of lost items : ";
     cin >> nItemsLost;
     cout << endl;
-    //Loop number of items
-    for (int i = 0; i < nItemsLost; i++) {
-        cout << "Enter lost item #" << i << endl;
 
+    //Loop number of items add to vector
+    string tempString;
+    for (int i = 0; i < nItemsLost; i++) {
+        cout << "Enter lost item #" << i << "details\n";
+        cin >> tempString;
+        ItemsLostVect.push_back(tempString);
     }
 
-
+    //Add display report
 
 
     // Push new user into vector
-    bookingInformation newbooking(
-        CustFirstName,
-        CustLastName,
-        BDateDay,
-        BDateMonth,
-        BDateYear,
-        PickupAddressStreet,
-        PickupAddressSuburb,
-        PickupAddressTownCity,
-        PickupAddressPcode,
-        DropAddressStreet,
-        DropAddressSuburb,
-        DropAddressTownCity,
-        DropAddressPcode,
-        DistanceBAddresses,
-        TripCost);
+    lostItems newreport(
+    ReportStatus,
+    CustFirstName,
+    CustLastName,
+    TripBookingID,
+    nItemsLost,
+    ItemsLostVect
+    );
 
-    bookingInfo.push_back(newbooking);
+    itemReport.push_back(newreport);
 
-
-
-
-    itemReport[0].TripBookingID = bookingNumSel;
-
-    cin >> bookingNumSelection;
-
-    TripBookingID
-
-
-
-
-
-
-
-
-
+    //Add write 
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
