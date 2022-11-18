@@ -177,6 +177,10 @@ int main()
     vector<lostItems> items; //Create member vector of users
     LoadLostItemsCSV(items, "itemslost.csv"); // Load lost item database 
 
+    cout << items[0].ItemsLostVect[0] << endl;
+    cout << items[0].ItemsLostVect[1] << endl;
+    cout << items[0].ItemsLostVect[2] << endl;
+
     //------------------------------------------------------------------------------------
     // Display login screen
 
