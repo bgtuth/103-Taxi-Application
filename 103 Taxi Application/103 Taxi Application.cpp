@@ -148,6 +148,7 @@ void Line(int, char, bool); //length, character, dropline after called t/f
 //Menus
 void DisplayUserMenu();
 void DisplayBookingMenu();
+void DisplayLostItemMenu();
 
 //User functions
 void CreateNewUser(vector<userInformation>&);
@@ -157,6 +158,9 @@ void RemoveUser(vector<userInformation>&);
 //Book taxi functions
 void BookRide(vector<bookingInformation>&);
 void ViewPastBookings(vector<bookingInformation>&);
+
+//Lost item functions
+void ReportLostItem(vector<lostItems>&, vector<bookingInformation>&);
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -177,6 +181,7 @@ int main()
     vector<lostItems> items; //Create member vector of users
     LoadLostItemsCSV(items, "itemslost.csv"); // Load lost item database 
 
+    //Test
     cout << items[0].ItemsLostVect[0] << endl;
     cout << items[0].ItemsLostVect[1] << endl;
     cout << items[0].ItemsLostVect[2] << endl;
@@ -327,6 +332,24 @@ mainmenu:
         }
         break;
 
+    case 3:
+        system("CLS"); //Clear console
+        DisplayLostItemMenu();
+
+        int lostItemMenu;
+        cin >> lostItemMenu;
+
+        switch (lostItemMenu) {
+        case 1:
+            break;
+        case 2:
+            break;
+        }
+
+
+
+        break;
+
 
     case 5:
         // Add, remove and view existing users
@@ -407,6 +430,64 @@ mainmenu:
 //----------------------------------------------------------------------------------------------------------------------------
 //Lost items functions
 
+void DisplayLostItemMenu() {
+    cout << endl;
+    cout << "Report and view lost items\n";
+    Line(80, '=', true);
+    cout << endl;
+    cout << "1) Report a new lost item/s" << endl;
+    cout << "2) View lost item reports" << endl;
+    cout << endl;
+    cout << "Enter selection : ";
+}
+
+void ReportLostItem(vector<lostItems>& items, vector<bookingInformation>& bookingInfo) {
+
+    //Init vars to load data into
+    //Status 
+    int ReportStatus;
+    //Name
+    string CustFirstName;
+    string CustLastName;
+    //Trip
+    int TripBookingID;
+    //Items
+    int nItemsLost;
+    vector<string> ItemsLostVect; //Create vector for storing multiple items
+
+    //Display booking screen - enter new customer
+    cout << endl;
+    cout << "Create lost item report" << endl;
+    Line(80, '=', true);
+    cout << endl;
+
+    cout << "Select past booking to attach report to\n";
+    Line(80, '-', true);
+    cout << endl;
+
+    for (int i = 0; i < bookingInfo.size(); i++)
+    {
+        cout << "Trip # " << i << " " << "Trip date : " << bookingInfo[i].BDateDay << "/" << bookingInfo[i].BDateMonth << "/" << bookingInfo[i].BDateYear
+            << " Customer name : " << bookingInfo[i].CustFirstName << " " << bookingInfo[i].CustLastName << endl;
+
+        cout << "|" << setw(40) << left << "Pickup address" << "|" << setw(40) << left << "Dropoff address" << "|" << "\n";
+        cout << "|" << setw(40) << bookingInfo[i].PickupAddressStreet << right << "|" << setw(40) << left << bookingInfo[i].DropAddressStreet << "|" << "\n";
+        cout << "|" << setw(40) << bookingInfo[i].PickupAddressSuburb << right << "|" << setw(40) << left << bookingInfo[i].DropAddressSuburb << "|" << "\n";
+        cout << "|" << setw(40) << bookingInfo[i].PickupAddressTownCity << right << "|" << setw(40) << left << bookingInfo[i].DropAddressTownCity << "|" << "\n";
+        cout << "|" << setw(40) << bookingInfo[i].PickupAddressPcode << right << "|" << setw(40) << left << bookingInfo[i].DropAddressPcode << "|" << "\n";
+
+        cout << "Fare cost : " << bookingInfo[i].TripCost << "\t" << "Distance : " << bookingInfo[i].DistanceBAddresses << "km";
+        cout << endl;
+        Line(80, '-', true);
+    }
+
+
+
+
+
+
+
+}
 
 //----------------------------------------------------------------------------------------------------------------------------
 //Book taxi functions
@@ -802,7 +883,7 @@ void LoadLostItemsCSV(vector<lostItems>& items,string filename) {
         getline(inputString, tempString, ',');
         nItemsLost = stoi(tempString.c_str());
 
-        //Loop to read the last elements into there own vector to push to structure. 
+        //Loop and read the last elements into there own vector to push to structure. 
         for (int i = 0; i < nItemsLost; i++) {
             getline(inputString, tempString, ',');
             ItemsLostVect.push_back(tempString);
