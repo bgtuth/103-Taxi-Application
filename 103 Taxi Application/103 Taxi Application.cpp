@@ -178,13 +178,13 @@ int main()
     vector<bookingInformation> bookingInfo; //Create member vector of users
     LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
 
-    vector<lostItems> items; //Create member vector of users
-    LoadLostItemsCSV(items, "itemslost.csv"); // Load lost item database 
+    vector<lostItems> itemReport; //Create member vector of users
+    LoadLostItemsCSV(itemReport, "itemslost.csv"); // Load lost item database 
 
     //Test
-    cout << items[0].ItemsLostVect[0] << endl;
-    cout << items[0].ItemsLostVect[1] << endl;
-    cout << items[0].ItemsLostVect[2] << endl;
+    cout << itemReport[0].ItemsLostVect[0] << endl;
+    cout << itemReport[0].ItemsLostVect[1] << endl;
+    cout << itemReport[0].ItemsLostVect[2] << endl;
 
     //------------------------------------------------------------------------------------
     // Display login screen
@@ -341,6 +341,7 @@ mainmenu:
 
         switch (lostItemMenu) {
         case 1:
+            ReportLostItem(itemReport, bookingInfo);
             break;
         case 2:
             break;
@@ -441,11 +442,11 @@ void DisplayLostItemMenu() {
     cout << "Enter selection : ";
 }
 
-void ReportLostItem(vector<lostItems>& items, vector<bookingInformation>& bookingInfo) {
+void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& bookingInfo) {
 
     //Init vars to load data into
     //Status 
-    int ReportStatus;
+    int ReportStatus = lost; //Default to lost
     //Name
     string CustFirstName;
     string CustLastName;
@@ -461,8 +462,9 @@ void ReportLostItem(vector<lostItems>& items, vector<bookingInformation>& bookin
     Line(80, '=', true);
     cout << endl;
 
-    cout << "Select past booking to attach report to\n";
+    cout << "Select a past booking to attach report to using the ""Trip #"" number \n";
     Line(80, '-', true);
+    cout << endl;
     cout << endl;
 
     for (int i = 0; i < bookingInfo.size(); i++)
@@ -480,6 +482,66 @@ void ReportLostItem(vector<lostItems>& items, vector<bookingInformation>& bookin
         cout << endl;
         Line(80, '-', true);
     }
+
+    //Add booking number to itemReport ID
+    cout << endl;
+    cout << endl;
+    cout << "Select past booking ""Trip #"" number : ";
+    cin >> TripBookingID;
+    cout << endl;
+    system("CLS");
+
+    //Confirm selected booking to attach lost item report to
+    cout << "Booking number " << TripBookingID << " selected!\n";
+    cout << endl;
+    
+    cout << "Add lost item details\n";
+    Line(80, '-', true);
+    cout << endl;
+
+    //Get lost item input from user
+    cout << "Enter the number of lost items : ";
+    cin >> nItemsLost;
+    cout << endl;
+    //Loop number of items
+    for (int i = 0; i < nItemsLost; i++) {
+        cout << "Enter lost item #" << i << endl;
+
+    }
+
+
+
+
+    // Push new user into vector
+    bookingInformation newbooking(
+        CustFirstName,
+        CustLastName,
+        BDateDay,
+        BDateMonth,
+        BDateYear,
+        PickupAddressStreet,
+        PickupAddressSuburb,
+        PickupAddressTownCity,
+        PickupAddressPcode,
+        DropAddressStreet,
+        DropAddressSuburb,
+        DropAddressTownCity,
+        DropAddressPcode,
+        DistanceBAddresses,
+        TripCost);
+
+    bookingInfo.push_back(newbooking);
+
+
+
+
+    itemReport[0].TripBookingID = bookingNumSel;
+
+    cin >> bookingNumSelection;
+
+    TripBookingID
+
+
 
 
 
@@ -848,7 +910,7 @@ void Line(int nChar, char c, bool dropline) {
 //Load CSV functions
 //Use reference so it doesn't make a copy of the vector and edits the original
 
-void LoadLostItemsCSV(vector<lostItems>& items,string filename) {
+void LoadLostItemsCSV(vector<lostItems>& itemReport,string filename) {
     ifstream inputFile;
     inputFile.open(filename);
     string line = "";
@@ -891,7 +953,7 @@ void LoadLostItemsCSV(vector<lostItems>& items,string filename) {
 
         //Load data into vector using structure constructor
         lostItems reportItems(ReportStatus, CustFirstName,  CustLastName,  TripBookingID,  nItemsLost, ItemsLostVect);
-        items.push_back(reportItems);
+        itemReport.push_back(reportItems);
         line = "";
     }
 }
