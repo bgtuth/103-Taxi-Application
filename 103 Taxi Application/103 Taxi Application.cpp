@@ -100,9 +100,33 @@ struct bookingInformation {
     }
 };
 
+struct lostItems {
+    //Status 
+    int ReportStatus;
+    //Name
+    string CustFirstName;
+    string CustLastName;
+    //Trip
+    int TripBookingID;
+    //Items
+    int nItemsLost;
+    vector<string> ItemsLostVect; //Create vector for storing multiple items
+
+    //Constructor
+    lostItems(int ReportStatus, string CustFirstName, string CustLastName, int TripBookingID, int nItemsLost, vector<string> ItemsLostVect) {
+        this->ReportStatus = ReportStatus;
+        this->CustLastName = CustLastName;
+        this->TripBookingID = TripBookingID;
+        this->nItemsLost = nItemsLost;
+        this->ItemsLostVect = ItemsLostVect;
+    }
+
+};
+
 //----------------------------------------------------------------------------------------------------------------------------
 //Global variables
 
+enum itemStatus {lost, found};
 bool IsAdminUser = false;
 double costPerKm = 1.90;
 
@@ -116,11 +140,12 @@ void LoadBookingInfoCSV(vector<bookingInformation>&, string);
 void WriteUserCSV(vector<userInformation>&, string);
 void WriteBookTaxiCSV(vector<bookingInformation>&, string);
 
+void LoadLostItemsCSV(vector<lostItems>&, string);
+
 //Misc
 void Line(int, char, bool); //length, character, dropline after called t/f
 
 //Menus
-void DisplayMainMenu();
 void DisplayUserMenu();
 void DisplayBookingMenu();
 
@@ -143,12 +168,14 @@ int main()
     // Load in existing user data at program start into vector structures
     //------------------------------------------------------------------------------------
 
-    vector<userInformation> users; //Create vector
+    vector<userInformation> users; //Create member vector of users
     LoadUsersCSV(users, "users.csv"); // Load users 
 
-    vector<bookingInformation> bookingInfo; //Create vector
+    vector<bookingInformation> bookingInfo; //Create member vector of users
     LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
 
+    vector<lostItems> items; //Create member vector of users
+    LoadLostItemsCSV(items, "itemslost.csv"); // Load lost item database 
 
     //------------------------------------------------------------------------------------
     // Display login screen
@@ -373,11 +400,13 @@ mainmenu:
 
 }
 
+//----------------------------------------------------------------------------------------------------------------------------
+//Lost items functions
+
 
 //----------------------------------------------------------------------------------------------------------------------------
-// User functions
-
 //Book taxi functions
+
 void DisplayBookingMenu() {
     cout << endl;
     cout << "Book Taxi, View past bookings\n";
@@ -733,6 +762,54 @@ void Line(int nChar, char c, bool dropline) {
 
 //Load CSV functions
 //Use reference so it doesn't make a copy of the vector and edits the original
+
+void LoadLostItemsCSV(vector<lostItems>& items,string filename) {
+    ifstream inputFile;
+    inputFile.open(filename);
+    string line = "";
+
+    while (getline(inputFile, line))
+    {
+        //Init vars to load data into
+        //Status 
+        int ReportStatus;
+        //Name
+        string CustFirstName;
+        string CustLastName;
+        //Trip
+        int TripBookingID;
+        //Items
+        int nItemsLost;
+        vector<string> ItemsLostVect; //Create vector for storing multiple items
+
+        //Takes string and separates data using comma delimiter
+        string tempString;
+        stringstream inputString(line);
+
+        getline(inputString, tempString, ',');
+        ReportStatus = stoi(tempString.c_str());
+
+        getline(inputString, CustFirstName, ',');
+        getline(inputString, CustLastName, ',');
+
+        getline(inputString, tempString, ',');
+        TripBookingID = stoi(tempString.c_str());
+
+        getline(inputString, tempString, ',');
+        nItemsLost = stoi(tempString.c_str());
+
+        //Loop to read the last elements into there own vector to push to structure. 
+        for (int i = 0; i < nItemsLost; i++) {
+            getline(inputString, tempString, ',');
+            ItemsLostVect.push_back(tempString);
+        }
+
+        //Load data into vector using structure constructor
+        lostItems reportItems(ReportStatus, CustFirstName,  CustLastName,  TripBookingID,  nItemsLost, ItemsLostVect);
+        items.push_back(reportItems);
+        line = "";
+    }
+}
 
 void LoadUsersCSV(vector<userInformation>& users,string filename) {
 
