@@ -916,7 +916,7 @@ void ReportItemResolvedRemoveEntry(vector<complaintInformation>& complaints)
 
     // Display all users
     cout << endl;
-    cout << "View current complaints\n";
+    cout << "Remove a complaint\n";
     Line(80, '=', true);
     for (int i = 0; i < complaints.size(); i++)
     {
