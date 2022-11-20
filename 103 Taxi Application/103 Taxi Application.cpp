@@ -113,8 +113,16 @@ struct lostItems {
     vector<string> ItemsLostVect; //Create vector for storing multiple items
 
     //Constructor
-    lostItems(int ReportStatus, string CustFirstName, string CustLastName, int TripBookingID, int nItemsLost, vector<string> ItemsLostVect) {
+    lostItems(
+        int ReportStatus,
+        string CustFirstName,
+        string CustLastName,
+        int TripBookingID,
+        int nItemsLost,
+        vector<string> ItemsLostVect)
+    {
         this->ReportStatus = ReportStatus;
+        this->CustFirstName = CustFirstName;
         this->CustLastName = CustLastName;
         this->TripBookingID = TripBookingID;
         this->nItemsLost = nItemsLost;
@@ -136,11 +144,13 @@ double costPerKm = 1.90;
 //Load & write
 void LoadUsersCSV(vector<userInformation>&, string);
 void LoadBookingInfoCSV(vector<bookingInformation>&, string);
+void LoadLostItemsCSV(vector<lostItems>&, string);
 
 void WriteUserCSV(vector<userInformation>&, string);
 void WriteBookTaxiCSV(vector<bookingInformation>&, string);
+void WriteLostItemsCSV(vector<lostItems>&, string);
 
-void LoadLostItemsCSV(vector<lostItems>&, string);
+
 
 //Misc
 void Line(int, char, bool); //length, character, dropline after called t/f
@@ -180,11 +190,6 @@ int main()
 
     vector<lostItems> itemReport; //Create member vector of users
     LoadLostItemsCSV(itemReport, "itemslost.csv"); // Load lost item database 
-
-    //Test
-    cout << itemReport[0].ItemsLostVect[0] << endl;
-    cout << itemReport[0].ItemsLostVect[1] << endl;
-    cout << itemReport[0].ItemsLostVect[2] << endl;
 
     //------------------------------------------------------------------------------------
     // Display login screen
@@ -313,6 +318,7 @@ mainmenu:
             system("CLS");
             ViewPastBookings(bookingInfo);
 
+
             Line(80, '-', true);
             cout << endl;
             cout << "Select one of the following options:" << endl;
@@ -335,6 +341,10 @@ mainmenu:
     case 3:
         system("CLS"); //Clear console
         DisplayLostItemMenu();
+
+        //Reload users vector contents to reflect any changes
+        itemReport.clear();
+        LoadLostItemsCSV(itemReport, "itemslost.csv"); // Load users 
 
         int lostItemMenu;
         cin >> lostItemMenu;
@@ -494,6 +504,10 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
     //Confirm selected booking to attach lost item report to
     cout << "Booking number " << TripBookingID << " selected!\n";
     cout << endl;
+
+    //Assign customer name details to lost item database
+    CustFirstName = bookingInfo[TripBookingID].CustFirstName;
+    CustLastName = bookingInfo[TripBookingID].CustLastName;
     
     cout << "Add lost item details\n";
     Line(80, '-', true);
@@ -504,17 +518,49 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
     cin >> nItemsLost;
     cout << endl;
 
+    cin.clear();
+    cin.ignore();
+
+    //Clear existing items in vector
+    ItemsLostVect.clear();
+
     //Loop number of items add to vector
     string tempString;
     for (int i = 0; i < nItemsLost; i++) {
-        cout << "Enter lost item #" << i << "details\n";
-        cin >> tempString;
+        cout << "Enter details of lost item #" << i << "\n";
+        getline(cin, tempString);
         ItemsLostVect.push_back(tempString);
     }
 
-    //Add display report
+    //Display lost item report
+    system("CLS");
+    cout << nItemsLost << " items added!\n";
+    cout << endl;
 
+    cout << "Trip # " << TripBookingID << " " << "Trip date : " << bookingInfo[TripBookingID].BDateDay << "/" << bookingInfo[TripBookingID].BDateMonth << "/" << bookingInfo[TripBookingID].BDateYear
+        << " Customer name : " << CustFirstName << " " << CustLastName << " Report status ";
 
+    if (ReportStatus == lost) {
+        cout << "lost";
+    }
+    else {
+        cout << "found";
+    }
+    cout << endl;
+
+    Line(83, '-', true);
+    cout << "|" << setw(40) << left << "Pickup address" << "|" << setw(40) << left << "Dropoff address" << "|" << "\n";
+    cout << "|" << setw(40) << bookingInfo[TripBookingID].PickupAddressStreet << right << "|" << setw(40) << left << bookingInfo[TripBookingID].DropAddressStreet << "|" << "\n";
+    Line(83, '-', true);
+    cout << "|" << setw(40) << left << "Item number" << "|" << setw(40) << left << "Item description" << "|" << "\n";
+    Line(83, '-', true);
+
+    //Print out items added to vector
+    for (int i = 0; i < nItemsLost; i++) {
+        cout << "|" << setw(40) << left << i << "|" << setw(40) << left << ItemsLostVect[i] << "|" << "\n";
+    }
+
+    
     // Push new user into vector
     lostItems newreport(
     ReportStatus,
@@ -527,7 +573,11 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
 
     itemReport.push_back(newreport);
 
-    //Add write 
+    WriteLostItemsCSV(itemReport,"itemslost.csv");
+
+    cout << itemReport[0].CustFirstName << endl; //Debug missing info
+    cout << itemReport[0].CustLastName;
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -1124,13 +1174,31 @@ void WriteBookTaxiCSV(vector<bookingInformation>& bookingInfo, string filename )
 
 }
 
+void WriteLostItemsCSV(vector<lostItems>& itemReport, string filename)
+{
+    int i = 0; //Starts at vector index of first user
+    ofstream appfile;
+    appfile.open(filename, ios::out);
+
+    //Nested for loop
+
+    for (auto itr = itemReport.begin(); itr != itemReport.end(); itr++) {
+
+        appfile << itemReport[i].ReportStatus << "," << itemReport[i].CustFirstName << "," << itemReport[i].CustLastName << "," << itemReport[i].TripBookingID << "," << itemReport[i].nItemsLost;
+        
+        //Loop and write the last elements from vector to end of csv. 
+
+        for (int j = 0; j < itemReport[i].ItemsLostVect.size(); j++) {
+            appfile << "," << itemReport[i].ItemsLostVect[j];
+        } //Fifth element of vector is the number of items
+
+        appfile << endl;
+        
+        i++;
+    }
+
+    appfile.close();
+}
+
 //----------------------------------------------------------------------------------------------------------------------------
 //Code snippets
-
-//Testing member creation
-//string FirstName = "test";
-//string LastName = "test";
-//string UserName = "test";
-//string Password = "test";
-//int IsAdmin = 0;
-//userInformation user(FirstName, LastName, UserName, Password, IsAdmin);
