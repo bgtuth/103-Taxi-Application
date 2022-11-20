@@ -186,7 +186,7 @@ int main()
     LoadUsersCSV(users, "users.csv"); // Load users 
 
     vector<bookingInformation> bookingInfo; //Create member vector of users
-    LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load users 
+    LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load booking info 
 
     vector<lostItems> itemReport; //Create member vector of users
     LoadLostItemsCSV(itemReport, "itemslost.csv"); // Load lost item database 
@@ -296,6 +296,9 @@ mainmenu:
         case 1:
             system("CLS");
             BookRide(bookingInfo);
+
+            itemReport.clear();
+            LoadLostItemsCSV(itemReport, "itemslost.csv"); // Load lost item database 
 
             Line(80, '-', true);
             cout << endl;
@@ -496,8 +499,17 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
     //Add booking number to itemReport ID
     cout << endl;
     cout << endl;
+
+reenterID:
+
     cout << "Select past booking ""Trip #"" number : ";
     cin >> TripBookingID;
+
+    if (TripBookingID >= bookingInfo.size()) {
+        cout << "Booking ID outside of range, please reenter booking ID\n";
+            goto reenterID;
+    }
+
     cout << endl;
     system("CLS");
 
@@ -675,7 +687,7 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
         BDateYear = stoi(tempY.c_str());
         cout << "Today's date added!\n";
 
-        cout << BDateDay << BDateMonth << BDateYear << "\n\n";
+        cout << BDateDay << "/" << BDateMonth << "/" << BDateYear << "\n\n";
 
         break;
     case 2:
@@ -778,12 +790,12 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
 void ViewPastBookings(vector<bookingInformation>& bookingInfo) {
     //Display all past bookings 
     cout << endl;
-    cout << "Book taxi for customer" << endl;
+    cout << "View past taxi bookings" << endl;
     Line(80, '=', true);
     cout << endl;
 
     cout << "Current user database contents\n";
-    Line(80, '-', true);
+    Line(83, '-', true);
     for (int i = 0; i < bookingInfo.size(); i++)
     {
         cout << "Trip # " << i << " " << "Trip date : " << bookingInfo[i].BDateDay << "/" << bookingInfo[i].BDateMonth << "/" << bookingInfo[i].BDateYear
@@ -795,9 +807,9 @@ void ViewPastBookings(vector<bookingInformation>& bookingInfo) {
         cout << "|" << setw(40) << bookingInfo[i].PickupAddressTownCity << right << "|" << setw(40) << left << bookingInfo[i].DropAddressTownCity << "|" << "\n";
         cout << "|" << setw(40) << bookingInfo[i].PickupAddressPcode << right << "|" << setw(40) << left << bookingInfo[i].DropAddressPcode << "|" << "\n";
 
-        cout << "Fare cost : " << bookingInfo[i].TripCost << "\t" << "Distance : " << bookingInfo[i].DistanceBAddresses << "km";
+        cout << "Fare cost $: " << bookingInfo[i].TripCost << "\t" << "Distance : " << bookingInfo[i].DistanceBAddresses << "km";
         cout << endl;
-        Line(80, '-', true);
+        Line(83, '-', true);
     }
 }
 
