@@ -150,8 +150,6 @@ void WriteUserCSV(vector<userInformation>&, string);
 void WriteBookTaxiCSV(vector<bookingInformation>&, string);
 void WriteLostItemsCSV(vector<lostItems>&, string);
 
-
-
 //Misc
 void Line(int, char, bool); //length, character, dropline after called t/f
 
@@ -171,6 +169,7 @@ void ViewPastBookings(vector<bookingInformation>&);
 
 //Lost item functions
 void ReportLostItem(vector<lostItems>&, vector<bookingInformation>&);
+void ViewLostItemsReports(vector<lostItems>&, vector<bookingInformation>&);
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -342,6 +341,9 @@ mainmenu:
         break;
 
     case 3:
+
+    lostitemsmenu:
+
         system("CLS"); //Clear console
         DisplayLostItemMenu();
 
@@ -355,12 +357,25 @@ mainmenu:
         switch (lostItemMenu) {
         case 1:
             ReportLostItem(itemReport, bookingInfo);
-            break;
         case 2:
-            break;
+            ViewLostItemsReports(itemReport, bookingInfo);
         }
 
+        Line(80, '-', true);
+        cout << endl;
+        cout << "Select one of the following options:" << endl;
+        cout << "1) Return to previous menu" << endl;
+        cout << "2) Return to main menu" << endl;
 
+        cin >> lostItemMenu;
+
+        switch (lostItemMenu)
+        {
+        case 1:
+            goto lostitemsmenu;
+        case 2:
+            goto mainmenu;
+        }
 
         break;
 
@@ -500,14 +515,14 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
     cout << endl;
     cout << endl;
 
-reenterID:
+reenterTripID:
 
     cout << "Select past booking ""Trip #"" number : ";
     cin >> TripBookingID;
 
     if (TripBookingID >= bookingInfo.size()) {
         cout << "Booking ID outside of range, please reenter booking ID\n";
-            goto reenterID;
+            goto reenterTripID;
     }
 
     cout << endl;
@@ -550,7 +565,7 @@ reenterID:
     cout << endl;
 
     cout << "Trip # " << TripBookingID << " " << "Trip date : " << bookingInfo[TripBookingID].BDateDay << "/" << bookingInfo[TripBookingID].BDateMonth << "/" << bookingInfo[TripBookingID].BDateYear
-        << " Customer name : " << CustFirstName << " " << CustLastName << " Report status ";
+        << " Customer name : " << CustFirstName << " " << CustLastName << " Report status :";
 
     if (ReportStatus == lost) {
         cout << "lost";
@@ -571,7 +586,7 @@ reenterID:
     for (int i = 0; i < nItemsLost; i++) {
         cout << "|" << setw(40) << left << i << "|" << setw(40) << left << ItemsLostVect[i] << "|" << "\n";
     }
-
+    Line(83, '-', true);
     
     // Push new user into vector
     lostItems newreport(
@@ -591,6 +606,83 @@ reenterID:
     cout << itemReport[0].CustLastName;
 
 }
+
+void ViewLostItemsReports(vector<lostItems>& itemReport, vector<bookingInformation>& bookingInfo) {
+
+    //Display booking screen - enter new customer
+    cout << endl;
+    cout << "View lost item reports" << endl;
+    Line(80, '=', true);
+    cout << endl;
+
+
+    for (int i = 0; i < itemReport.size(); i++) {
+
+        //Display header for each report - pull data from both itemReport and bookingInfo vectors
+        cout << "Trip # " << itemReport[i].TripBookingID << " " << "Trip date : " << bookingInfo[itemReport[i].TripBookingID].BDateDay << "/" << bookingInfo[itemReport[i].TripBookingID].BDateMonth << "/" << bookingInfo[itemReport[i].TripBookingID].BDateYear
+            << " Customer name : " << itemReport[i].CustFirstName << " " << itemReport[i].CustLastName << " Report status :";
+
+        //Display status
+        if (itemReport[i].ReportStatus == lost) {
+            cout << "lost";
+        }
+        else {
+            cout << "found";
+        }
+        cout << endl;
+
+        Line(83, '-', true);
+        cout << "|" << setw(40) << left << "Pickup address" << "|" << setw(40) << left << "Dropoff address" << "|" << "\n";
+        cout << "|" << setw(40) << bookingInfo[i].PickupAddressStreet << right << "|" << setw(40) << left << bookingInfo[i].DropAddressStreet << "|" << "\n";
+        Line(83, '-', true);
+        cout << "|" << setw(40) << left << "Item number" << "|" << setw(40) << left << "Item description" << "|" << "\n";
+        Line(83, '-', true);
+
+        //Print out items added to vector
+        for (int j = 0; j < itemReport[i].nItemsLost; j++) {
+            cout << "|" << setw(40) << left << j << "|" << setw(40) << left << itemReport[i].ItemsLostVect[j] << "|" << "\n";
+        }
+
+        Line(83, '-', true);
+        cout << endl;
+
+    }
+
+    cout << endl;
+    cout << endl;
+
+    //
+    Line(80, '-', true);
+    cout << endl;
+    cout << "Select one of the following options:" << endl;
+    cout << "1) Return to previous menu" << endl;
+    cout << "2) Return to main menu" << endl;
+    cout << "3) Remove a user" << endl;
+
+
+
+
+    //Add booking number to itemReport ID
+    cout << endl;
+    cout << endl;
+
+reenterTripID:
+
+    int TripBookingID;
+
+    cout << "Select past booking ""Trip #"" number : ";
+    cin >> TripBookingID;
+
+    if (TripBookingID >= bookingInfo.size()) {
+        cout << "Booking ID outside of range, please reenter booking ID\n";
+        goto reenterTripID;
+    }
+
+    
+
+
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------------
 //Book taxi functions
