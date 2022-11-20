@@ -52,8 +52,6 @@ struct bookingInformation {
     //Distance + Cost
     int DistanceBAddresses;
     double TripCost;
-    //Trip
-    int TripBookingID;
 
     //Constructor
     bookingInformation
@@ -77,9 +75,7 @@ struct bookingInformation {
         int DropAddressPcode,
         //Distance + Cost
         int DistanceBAddresses,
-        double TripCost,
-        //Trip
-        int TripBookingID
+        double TripCost
     )
     {
         this->CustFirstName = CustFirstName;
@@ -101,7 +97,6 @@ struct bookingInformation {
 
         this->DistanceBAddresses = DistanceBAddresses;
         this->TripCost = TripCost;
-        this->TripBookingID = TripBookingID;
     }
 };
 
@@ -113,8 +108,6 @@ struct lostItems {
     string CustLastName;
     //Trip
     int TripBookingID;
-    //Report ID
-    int ReportID;
     //Items
     int nItemsLost;
     vector<string> ItemsLostVect; //Create vector for storing multiple items
@@ -125,7 +118,6 @@ struct lostItems {
         string CustFirstName,
         string CustLastName,
         int TripBookingID,
-        int ReportID,
         int nItemsLost,
         vector<string> ItemsLostVect)
     {
@@ -133,7 +125,6 @@ struct lostItems {
         this->CustFirstName = CustFirstName;
         this->CustLastName = CustLastName;
         this->TripBookingID = TripBookingID;
-        this->ReportID = ReportID;
         this->nItemsLost = nItemsLost;
         this->ItemsLostVect = ItemsLostVect;
     }
@@ -143,7 +134,7 @@ struct lostItems {
 //----------------------------------------------------------------------------------------------------------------------------
 //Global variables
 
-enum itemStatus {lost, found};
+enum itemStatus { lost, found };
 bool IsAdminUser = false;
 double costPerKm = 1.90;
 
@@ -329,6 +320,7 @@ mainmenu:
             system("CLS");
             ViewPastBookings(bookingInfo);
 
+
             Line(80, '-', true);
             cout << endl;
             cout << "Select one of the following options:" << endl;
@@ -396,10 +388,6 @@ mainmenu:
 
         system("CLS"); //Clear console
         DisplayUserMenu();
-
-        //Clear and reload CSV if returning to previous menu
-        users.clear();
-        LoadUsersCSV(users, "users.csv"); // Load users 
 
         // user input
         int userManagementMenu;
@@ -492,8 +480,8 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
     //Name
     string CustFirstName;
     string CustLastName;
-    //Report ID
-    int ReportID;
+    //Trip
+    int TripBookingID;
     //Items
     int nItemsLost;
     vector<string> ItemsLostVect; //Create vector for storing multiple items
@@ -511,7 +499,7 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
 
     for (int i = 0; i < bookingInfo.size(); i++)
     {
-        cout << "Report # " << i << " Trip # " << bookingInfo[i].TripBookingID << " Trip date : " << bookingInfo[i].BDateDay << "/" << bookingInfo[i].BDateMonth << "/" << bookingInfo[i].BDateYear
+        cout << "Trip # " << i << " " << "Trip date : " << bookingInfo[i].BDateDay << "/" << bookingInfo[i].BDateMonth << "/" << bookingInfo[i].BDateYear
             << " Customer name : " << bookingInfo[i].CustFirstName << " " << bookingInfo[i].CustLastName << endl;
 
         cout << "|" << setw(40) << left << "Pickup address" << "|" << setw(40) << left << "Dropoff address" << "|" << "\n";
@@ -523,36 +511,33 @@ void ReportLostItem(vector<lostItems>& itemReport, vector<bookingInformation>& b
         cout << "Fare cost : " << bookingInfo[i].TripCost << "\t" << "Distance : " << bookingInfo[i].DistanceBAddresses << "km";
         cout << endl;
         Line(80, '-', true);
-
-        //Load
-
     }
 
     //Add booking number to itemReport ID
     cout << endl;
     cout << endl;
 
-reenterReportID:
+reenterTripID:
 
-    cout << "Select lost item/s ""Report #"" number : ";
-    cin >> ReportID;
+    cout << "Select past booking ""Trip #"" number : ";
+    cin >> TripBookingID;
 
-    if (ReportID >= itemReport.size()) {
+    if (TripBookingID >= bookingInfo.size()) {
         cout << "Booking ID outside of range, please reenter booking ID\n";
-            goto reenterReportID;
+        goto reenterTripID;
     }
 
     cout << endl;
     system("CLS");
 
     //Confirm selected booking to attach lost item report to
-    cout << "Report number " << ReportID << " selected!\n";
+    cout << "Booking number " << TripBookingID << " selected!\n";
     cout << endl;
 
     //Assign customer name details to lost item database
     CustFirstName = bookingInfo[TripBookingID].CustFirstName;
     CustLastName = bookingInfo[TripBookingID].CustLastName;
-    
+
     cout << "Add lost item details\n";
     Line(80, '-', true);
     cout << endl;
@@ -581,7 +566,7 @@ reenterReportID:
     cout << nItemsLost << " items added!\n";
     cout << endl;
 
-    cout << "Report # " << TripBookingID << " " << "Trip date : " << bookingInfo[TripBookingID].BDateDay << "/" << bookingInfo[TripBookingID].BDateMonth << "/" << bookingInfo[TripBookingID].BDateYear
+    cout << "Trip # " << TripBookingID << " " << "Trip date : " << bookingInfo[TripBookingID].BDateDay << "/" << bookingInfo[TripBookingID].BDateMonth << "/" << bookingInfo[TripBookingID].BDateYear
         << " Customer name : " << CustFirstName << " " << CustLastName << " Report status :";
 
     if (ReportStatus == lost) {
@@ -604,22 +589,22 @@ reenterReportID:
         cout << "|" << setw(40) << left << i << "|" << setw(40) << left << ItemsLostVect[i] << "|" << "\n";
     }
     Line(83, '-', true);
-    
+
     // Push new user into vector
     lostItems newreport(
-    ReportStatus,
-    CustFirstName,
-    CustLastName,
-    TripBookingID,
-    nItemsLost,
-    ItemsLostVect
+        ReportStatus,
+        CustFirstName,
+        CustLastName,
+        TripBookingID,
+        nItemsLost,
+        ItemsLostVect
     );
 
     itemReport.push_back(newreport);
 
-    WriteLostItemsCSV(itemReport,"itemslost.csv");
-
+    WriteLostItemsCSV(itemReport, "itemslost.csv");
 }
+
 
 void ViewLostItemsReports(vector<lostItems>& itemReport, vector<bookingInformation>& bookingInfo) {
 
@@ -667,7 +652,8 @@ void ViewLostItemsReports(vector<lostItems>& itemReport, vector<bookingInformati
     cout << endl;
     cout << "Select one of the following options:" << endl;
     cout << "1) Change item status found/lost" << endl;
-    cout << "2) Remove report" << endl;
+    cout << "2) Clear reports" << endl;
+    cout << "3) Exit" << endl;
 
     cin >> lostItemMenu;
     cout << endl;
@@ -708,30 +694,13 @@ void ViewLostItemsReports(vector<lostItems>& itemReport, vector<bookingInformati
         }
         break;
     case 2:
-
-    reenterRemoveTripID:
-
-        int removeReportID;
-
-        //Check ID is within range
-        cout << "Select past booking ""Trip #"" number to remove: ";
-        cin >> removeReportID;
-
-        if (removeReportID >= bookingInfo.size()) {
-            cout << "Booking ID outside of range, please reenter booking ID\n";
-            goto reenterRemoveTripID;
-        }
-
-        // Remove report. It's as simple as this one line.
-        itemReport.erase(itemReport.begin() + removeReportID);
-
-        //Confirmation
-        cout << endl;
-        cout << "Report removed!";
+        itemReport.clear();
+        cout << "Reports cleared!" << endl;
+        break;
+    case 3:
         break;
     }
 
-    //Write changes
     WriteLostItemsCSV(itemReport, "itemslost.csv");
 }
 
@@ -773,8 +742,6 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
     //Distance + Cost
     int DistanceBAddresses;
     double TripCost;
-    //Trip ID
-    int TripBookingID = 0; //Add default value to load into vector/structure
 
 
     //Display booking screen - enter new customer
@@ -806,7 +773,7 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
 
     //Using strftime to format output
     time_t t = time(0);
-    strftime(date, 20, "%d/%m/%Y", localtime(&t)); 
+    strftime(date, 20, "%d/%m/%Y", localtime(&t));
     strftime(day, 20, "%d", localtime(&t));
     strftime(month, 20, "%m", localtime(&t));
     strftime(year, 20, "%Y", localtime(&t));
@@ -907,25 +874,24 @@ void BookRide(vector<bookingInformation>& bookingInfo) {
     cout << "Distance calculated between addresses = " << DistanceBAddresses << "km" << endl;
     cout << "Cost per Km = $" << costPerKm << endl;
     cout << "Taxi fare cost = $" << TripCost << endl;
-   
+
     // Push new user into vector
-    bookingInformation newbooking (
-    CustFirstName,
-    CustLastName,
-    BDateDay,
-    BDateMonth,
-    BDateYear,
-    PickupAddressStreet,
-    PickupAddressSuburb,
-    PickupAddressTownCity,
-    PickupAddressPcode,
-    DropAddressStreet,
-    DropAddressSuburb,
-    DropAddressTownCity,
-    DropAddressPcode,
-    DistanceBAddresses,
-    TripCost,
-    TripBookingID);
+    bookingInformation newbooking(
+        CustFirstName,
+        CustLastName,
+        BDateDay,
+        BDateMonth,
+        BDateYear,
+        PickupAddressStreet,
+        PickupAddressSuburb,
+        PickupAddressTownCity,
+        PickupAddressPcode,
+        DropAddressStreet,
+        DropAddressSuburb,
+        DropAddressTownCity,
+        DropAddressPcode,
+        DistanceBAddresses,
+        TripCost);
 
     bookingInfo.push_back(newbooking);
 
@@ -948,7 +914,7 @@ void ViewPastBookings(vector<bookingInformation>& bookingInfo) {
         cout << "Trip # " << i << " " << "Trip date : " << bookingInfo[i].BDateDay << "/" << bookingInfo[i].BDateMonth << "/" << bookingInfo[i].BDateYear
             << " Customer name : " << bookingInfo[i].CustFirstName << " " << bookingInfo[i].CustLastName << endl;
 
-        cout << "|" << setw(40) << left << "Pickup address" << "|" << setw(40) << left << "Dropoff address"  << "|" << "\n";
+        cout << "|" << setw(40) << left << "Pickup address" << "|" << setw(40) << left << "Dropoff address" << "|" << "\n";
         cout << "|" << setw(40) << bookingInfo[i].PickupAddressStreet << right << "|" << setw(40) << left << bookingInfo[i].DropAddressStreet << "|" << "\n";
         cout << "|" << setw(40) << bookingInfo[i].PickupAddressSuburb << right << "|" << setw(40) << left << bookingInfo[i].DropAddressSuburb << "|" << "\n";
         cout << "|" << setw(40) << bookingInfo[i].PickupAddressTownCity << right << "|" << setw(40) << left << bookingInfo[i].DropAddressTownCity << "|" << "\n";
@@ -957,13 +923,7 @@ void ViewPastBookings(vector<bookingInformation>& bookingInfo) {
         cout << "Fare cost $: " << bookingInfo[i].TripCost << "\t" << "Distance : " << bookingInfo[i].DistanceBAddresses << "km";
         cout << endl;
         Line(83, '-', true);
-
-        //Assign TripBookingID to each item for later use in the report lost items functionality
-        bookingInfo[i].TripBookingID = i;
     }
-
-    //Update CSV
-    WriteBookTaxiCSV(bookingInfo, "bookingifo.csv");
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -1037,7 +997,7 @@ void ViewExistingUser(vector<userInformation>& users) {
     for (int i = 0; i < users.size(); i++)
     {
         cout << " (" << i << ") " << users[i].FirstName << " " << users[i].LastName << "    Username : " << users[i].UserName << "\tAdmin : ";
-   
+
         if (users[i].IsAdmin == 1)
         {
             cout << "True";
@@ -1081,9 +1041,8 @@ void RemoveUser(vector<userInformation>& users) {
 
     // Remove the user. It's as simple as this one line.
     users.erase(users.begin() + userToRemove);
-
-    // Update the CSV file to reflect changes
-    WriteUserCSV( users, "users.csv");
+    // Update the CSV file
+    WriteUserCSV(users, "users.csv");
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -1100,12 +1059,12 @@ void Line(int nChar, char c, bool dropline) {
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
-//Read write functions
+//Functions
 
 //Load CSV functions
 //Use reference so it doesn't make a copy of the vector and edits the original
 
-void LoadLostItemsCSV(vector<lostItems>& itemReport,string filename) {
+void LoadLostItemsCSV(vector<lostItems>& itemReport, string filename) {
     ifstream inputFile;
     inputFile.open(filename);
     string line = "";
@@ -1147,13 +1106,13 @@ void LoadLostItemsCSV(vector<lostItems>& itemReport,string filename) {
         }
 
         //Load data into vector using structure constructor
-        lostItems reportItems(ReportStatus, CustFirstName,  CustLastName,  TripBookingID,  nItemsLost, ItemsLostVect);
+        lostItems reportItems(ReportStatus, CustFirstName, CustLastName, TripBookingID, nItemsLost, ItemsLostVect);
         itemReport.push_back(reportItems);
         line = "";
     }
 }
 
-void LoadUsersCSV(vector<userInformation>& users,string filename) {
+void LoadUsersCSV(vector<userInformation>& users, string filename) {
 
     ifstream inputFile;
     inputFile.open(filename);
@@ -1183,7 +1142,7 @@ void LoadUsersCSV(vector<userInformation>& users,string filename) {
         userInformation user(FirstName, LastName, UserName, Password, IsAdmin);
         users.push_back(user);
         line = "";
-    } 
+    }
 }
 
 void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename) {
@@ -1192,97 +1151,97 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
     inputFile.open(filename);
     string line = "";
 
-        while (getline(inputFile, line))
-        {
+    while (getline(inputFile, line))
+    {
 
-            //Init vars to load data into
+        //Init vars to load data into
+        //Name
+        string CustFirstName;
+        string CustLastName;
+        //Date
+        int BDateDay;
+        int BDateMonth;
+        int BDateYear;
+        //Pickup Address
+        string PickupAddressStreet;
+        string PickupAddressSuburb;
+        string PickupAddressTownCity;
+        int PickupAddressPcode;
+        //Dropoff Address
+        string DropAddressStreet;
+        string DropAddressSuburb;
+        string DropAddressTownCity;
+        int DropAddressPcode;
+        //Distance + Cost
+        int DistanceBAddresses;
+        double TripCost;
+
+        //Takes string and separates data using comma delimiter
+        string tempString;
+        stringstream inputString(line);
+        //Name
+        getline(inputString, CustFirstName, ',');
+        getline(inputString, CustLastName, ',');
+        //Date
+        getline(inputString, tempString, ',');
+        BDateDay = stoi(tempString.c_str());
+        getline(inputString, tempString, ',');
+        BDateMonth = stoi(tempString.c_str());
+        getline(inputString, tempString, ',');
+        BDateYear = stoi(tempString.c_str());
+        //Pickup Address
+        getline(inputString, PickupAddressStreet, ',');
+        getline(inputString, PickupAddressSuburb, ',');
+        getline(inputString, PickupAddressTownCity, ',');
+        getline(inputString, tempString, ',');
+        PickupAddressPcode = stoi(tempString.c_str());
+        //Dropoff Address
+        getline(inputString, DropAddressStreet, ',');
+        getline(inputString, DropAddressSuburb, ',');
+        getline(inputString, DropAddressTownCity, ',');
+        getline(inputString, tempString, ',');
+        DropAddressPcode = stoi(tempString.c_str());
+        //Distance + Cost
+        getline(inputString, tempString, ',');
+        DistanceBAddresses = stoi(tempString.c_str());
+        getline(inputString, tempString, ',');
+        TripCost = stod(tempString.c_str()); //stod method for converting to double
+
+
+        //Load data into vector using structure constructor
+        bookingInformation bInfo(
             //Name
-            string CustFirstName;
-            string CustLastName;
+            CustFirstName,
+            CustLastName,
             //Date
-            int BDateDay;
-            int BDateMonth;
-            int BDateYear;
+            BDateDay,
+            BDateMonth,
+            BDateYear,
             //Pickup Address
-            string PickupAddressStreet;
-            string PickupAddressSuburb;
-            string PickupAddressTownCity;
-            int PickupAddressPcode;
+            PickupAddressStreet,
+            PickupAddressSuburb,
+            PickupAddressTownCity,
+            PickupAddressPcode,
             //Dropoff Address
-            string DropAddressStreet;
-            string DropAddressSuburb;
-            string DropAddressTownCity;
-            int DropAddressPcode;
+            DropAddressStreet,
+            DropAddressSuburb,
+            DropAddressTownCity,
+            DropAddressPcode,
             //Distance + Cost
-            int DistanceBAddresses;
-            double TripCost;
-
-            //Takes string and separates data using comma delimiter
-            string tempString;
-            stringstream inputString(line);
-            //Name
-            getline(inputString, CustFirstName, ',');
-            getline(inputString, CustLastName, ',');
-            //Date
-            getline(inputString, tempString, ',');
-            BDateDay = stoi(tempString.c_str());
-            getline(inputString, tempString, ',');
-            BDateMonth = stoi(tempString.c_str());
-            getline(inputString, tempString, ',');
-            BDateYear = stoi(tempString.c_str());
-            //Pickup Address
-            getline(inputString, PickupAddressStreet, ',');
-            getline(inputString, PickupAddressSuburb, ',');
-            getline(inputString, PickupAddressTownCity, ',');
-            getline(inputString, tempString, ',');
-            PickupAddressPcode = stoi(tempString.c_str());
-            //Dropoff Address
-            getline(inputString, DropAddressStreet, ',');
-            getline(inputString, DropAddressSuburb, ',');
-            getline(inputString, DropAddressTownCity, ',');
-            getline(inputString, tempString, ',');
-            DropAddressPcode = stoi(tempString.c_str());
-            //Distance + Cost
-            getline(inputString, tempString, ',');
-            DistanceBAddresses = stoi(tempString.c_str());
-            getline(inputString, tempString, ',');
-            TripCost = stod(tempString.c_str()); //stod method for converting to double
+            DistanceBAddresses,
+            TripCost
+        );
 
 
-            //Load data into vector using structure constructor
-            bookingInformation bInfo(
-                //Name
-                CustFirstName,
-                CustLastName,
-                //Date
-                BDateDay,
-                BDateMonth,
-                BDateYear,
-                //Pickup Address
-                PickupAddressStreet,
-                PickupAddressSuburb,
-                PickupAddressTownCity,
-                PickupAddressPcode,
-                //Dropoff Address
-                DropAddressStreet,
-                DropAddressSuburb,
-                DropAddressTownCity,
-                DropAddressPcode,
-                //Distance + Cost
-                DistanceBAddresses,
-                TripCost
-            );
-
-
-            bookingInfo.push_back(bInfo);
-            line = "";
-        }
-
+        bookingInfo.push_back(bInfo);
+        line = "";
     }
+
+}
 
 //Write CSV function - Need to update to use same switch case for directing information
 
-void WriteUserCSV(vector<userInformation>& users, string filename )
+void WriteUserCSV(vector<userInformation>& users, string filename)
 {
     int i = 0; //Starts at vector index of first user
     ofstream appfile;
@@ -1297,7 +1256,7 @@ void WriteUserCSV(vector<userInformation>& users, string filename )
     appfile.close();
 }
 
-void WriteBookTaxiCSV(vector<bookingInformation>& bookingInfo, string filename )
+void WriteBookTaxiCSV(vector<bookingInformation>& bookingInfo, string filename)
 {
     int i = 0; //Starts at vector index of first driver
     ofstream appfile;
@@ -1307,37 +1266,11 @@ void WriteBookTaxiCSV(vector<bookingInformation>& bookingInfo, string filename )
 
         appfile << bookingInfo[i].CustFirstName << "," << bookingInfo[i].CustLastName << "," << bookingInfo[i].BDateDay << "," << bookingInfo[i].BDateMonth << "," << bookingInfo[i].BDateYear << ","
             << bookingInfo[i].PickupAddressStreet << "," << bookingInfo[i].PickupAddressSuburb << "," << bookingInfo[i].PickupAddressTownCity << "," << bookingInfo[i].PickupAddressPcode << ","
-            << bookingInfo[i].DropAddressStreet << "," << bookingInfo[i].DropAddressSuburb << "," << bookingInfo[i].DropAddressTownCity << "," << bookingInfo[i].DropAddressPcode << ","
-            << bookingInfo[i].DistanceBAddresses << "," << bookingInfo[i].TripCost << "," << bookingInfo[i].TripBookingID << endl;
+            << bookingInfo[i].DropAddressStreet << "," << bookingInfo[i].DropAddressSuburb << "," << bookingInfo[i].DropAddressTownCity << "," << bookingInfo[i].DropAddressPcode << "," << bookingInfo[i].DistanceBAddresses << "," << bookingInfo[i].TripCost << endl;
         i++;
     }
 
     appfile.close();
-
-    //Init vars to load data into
-//Name
-    string CustFirstName;
-    string CustLastName;
-    //Date
-    int BDateDay;
-    int BDateMonth;
-    int BDateYear;
-    //Pickup Address
-    string PickupAddressStreet;
-    string PickupAddressSuburb;
-    string PickupAddressTownCity;
-    int PickupAddressPcode;
-    //Dropoff Address
-    string DropAddressStreet;
-    string DropAddressSuburb;
-    string DropAddressTownCity;
-    int DropAddressPcode;
-    //Distance + Cost
-    int DistanceBAddresses;
-    double TripCost;
-
-
-
 
 }
 
@@ -1352,7 +1285,7 @@ void WriteLostItemsCSV(vector<lostItems>& itemReport, string filename)
     for (auto itr = itemReport.begin(); itr != itemReport.end(); itr++) {
 
         appfile << itemReport[i].ReportStatus << "," << itemReport[i].CustFirstName << "," << itemReport[i].CustLastName << "," << itemReport[i].TripBookingID << "," << itemReport[i].nItemsLost;
-        
+
         //Loop and write the last elements from vector to end of csv. 
 
         for (int j = 0; j < itemReport[i].ItemsLostVect.size(); j++) {
@@ -1360,7 +1293,7 @@ void WriteLostItemsCSV(vector<lostItems>& itemReport, string filename)
         } //Fifth element of vector is the number of items
 
         appfile << endl;
-        
+
         i++;
     }
 
