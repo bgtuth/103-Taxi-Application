@@ -667,7 +667,7 @@ void ViewLostItemsReports(vector<lostItems>& itemReport, vector<bookingInformati
         cout << "Select past booking ""Trip #"" number to change report status : ";
         cin >> TripBookingID;
 
-        if (TripBookingID >= bookingInfo.size()) {
+        if (TripBookingID > itemReport.size() - 1) {
             cout << "Booking ID outside of range, please reenter booking ID\n";
             goto reenterTripID;
         }
