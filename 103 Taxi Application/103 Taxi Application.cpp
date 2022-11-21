@@ -100,6 +100,25 @@ struct bookingInformation {
     }
 };
 
+
+// Complaints feature data structure. Maps to the design as per Figma structural drawing.
+struct complaintInformation
+{
+    //Structure variables
+    string CustomerFirstName;
+    string CustomerLastName;
+    string ComplaintReason;
+    string DateMade;
+    string DriverName;
+
+    complaintInformation(string CustomerFirstName, string CustomerLastName, string ComplaintReason, string DateMade, string DriverName)
+    {
+        this->CustomerFirstName = CustomerFirstName;
+        this->CustomerLastName = CustomerLastName;
+        this->ComplaintReason = ComplaintReason;
+        this->DateMade = DateMade;
+        this->DriverName = DriverName;
+=======
 struct lostItems {
     //Status 
     int ReportStatus;
@@ -144,11 +163,21 @@ double costPerKm = 1.90;
 //Load & write
 void LoadUsersCSV(vector<userInformation>&, string);
 void LoadBookingInfoCSV(vector<bookingInformation>&, string);
+
+void LoadComplaintCSV(vector<complaintInformation>&, string);
+
+
+void WriteUserCSV(vector<userInformation>&, string);
+void WriteBookTaxiCSV(vector<bookingInformation>&, string);
+void WriteComplaintCSVAppendOnly(vector<complaintInformation>&, string);
+void WriteComplaintCSVFullOverWrite(vector<complaintInformation>&, string);
+=======
 void LoadLostItemsCSV(vector<lostItems>&, string);
 
 void WriteUserCSV(vector<userInformation>&, string);
 void WriteBookTaxiCSV(vector<bookingInformation>&, string);
 void WriteLostItemsCSV(vector<lostItems>&, string);
+
 
 //Misc
 void Line(int, char, bool); //length, character, dropline after called t/f
@@ -156,7 +185,11 @@ void Line(int, char, bool); //length, character, dropline after called t/f
 //Menus
 void DisplayUserMenu();
 void DisplayBookingMenu();
+
+void DisplayComplaintsMenu();
+=======
 void DisplayLostItemMenu();
+
 
 //User functions
 void CreateNewUser(vector<userInformation>&);
@@ -167,9 +200,16 @@ void RemoveUser(vector<userInformation>&);
 void BookRide(vector<bookingInformation>&);
 void ViewPastBookings(vector<bookingInformation>&);
 
+
+// Complaints functions
+void LodgeNewComplaint(vector<complaintInformation>&);
+void ViewPastComplaints(vector<complaintInformation>&);
+void ReportItemResolvedRemoveEntry(vector<complaintInformation>&);
+=======
 //Lost item functions
 void ReportLostItem(vector<lostItems>&, vector<bookingInformation>&);
 void ViewLostItemsReports(vector<lostItems>&, vector<bookingInformation>&);
+
 
 
 //----------------------------------------------------------------------------------------------------------------------------
@@ -187,8 +227,14 @@ int main()
     vector<bookingInformation> bookingInfo; //Create member vector of users
     LoadBookingInfoCSV(bookingInfo, "bookinginfo.csv"); // Load booking info 
 
+
+    // Load complaints data, even if empty.
+    vector<complaintInformation> complaints; //Create vector
+    LoadComplaintCSV(complaints, "complaints.csv"); // Load users 
+=======
     vector<lostItems> itemReport; //Create member vector of users
     LoadLostItemsCSV(itemReport, "itemslost.csv"); // Load lost item database 
+
 
     //------------------------------------------------------------------------------------
     // Display login screen
@@ -340,6 +386,98 @@ mainmenu:
         }
         break;
 
+// complaints_feature
+    case 2:
+        // Lodge new complaint and view current complaints.
+    complaintsmenu:
+        system("CLS"); //Clear console
+        DisplayComplaintsMenu();
+
+        // user input
+        int complaintsMenu;
+        cin >> complaintsMenu;
+
+        switch (complaintsMenu)
+        {
+        case 1:
+            // lodge new complaint
+            int newcomplaintReturnMenuOptions;
+            system("CLS");
+            // The CSV with previous comments is loaded into the ventor.
+            // Here I am adding a new complaint and just want one entry in the vector.
+            // So I clear the content of the vector for this purpose.
+            complaints.clear();
+            LodgeNewComplaint(complaints);
+            cout << endl;
+            cout << "Complaint saved";
+            Line(80, '-', true);
+            cout << endl;
+            cout << "Select one of the following options:" << endl;
+            cout << "1) Return to previous menu" << endl;
+            cout << "2) Return to main menu" << endl;
+
+            cin >> newcomplaintReturnMenuOptions;
+            switch (newcomplaintReturnMenuOptions)
+            {
+            case 1:
+                goto complaintsmenu;
+                break;
+            case 2:
+                goto mainmenu;
+                break;
+            }
+
+            break;
+        case 2:
+            // view complaints
+            int viewcomplaintsMenuReturnSelection;
+            system("CLS");
+            ViewPastComplaints(complaints);
+
+            Line(80, '-', true);
+            cout << endl;
+            cout << "Select one of the following options:" << endl;
+            cout << "1) Return to previous menu" << endl;
+            cout << "2) Return to main menu" << endl;
+            cout << "3) Report item resolved, remove entry" << endl;
+
+            cin >> viewcomplaintsMenuReturnSelection;
+            switch (viewcomplaintsMenuReturnSelection)
+            {
+            case 1:
+                goto complaintsmenu;
+            case 2:
+                goto mainmenu;
+            case 3:
+                system("CLS");
+
+                // Load in the complaints data again. It's possible that from a previous menu, such as creating a new complaint, that the vector was cleared and only has
+                // in memory data not reflect of the file in storage.
+                complaints.clear();
+                LoadComplaintCSV(complaints, "complaints.csv");
+                
+                ReportItemResolvedRemoveEntry(complaints);
+                int complaintResolveMenuOptions = 0;
+                Line(80, '-', true);
+                cout << endl;
+                cout << "Select one of the following options:" << endl;
+                cout << "1) Return to previous menu" << endl;
+                cout << "2) Return to main menu" << endl;
+
+                switch (complaintResolveMenuOptions)
+                {
+                case 1:
+                    goto complaintsmenu;
+                    break;
+                case 2:
+                    goto mainmenu;
+                    break;
+                }
+
+            }
+            break;
+        }
+
     case 3:
 
     lostitemsmenu:
@@ -380,7 +518,6 @@ mainmenu:
         }
 
         break;
-
 
     case 5:
         // Add, remove and view existing users
@@ -1045,6 +1182,106 @@ void RemoveUser(vector<userInformation>& users) {
     WriteUserCSV(users, "users.csv");
 }
 
+// ---------------------------------------------------------------------------------------------------------------------------
+// Complaints functions
+
+void DisplayComplaintsMenu()
+{
+    cout << endl;
+    cout << "Lodge Complaint\n";
+    Line(80, '=', true);
+    cout << endl;
+    cout << "1) Lodge new complaint" << endl;
+    cout << "2) View current complaints, report case resolved" << endl;
+    cout << endl;
+    cout << "Enter selection : ";
+}
+
+void ViewPastComplaints(vector<complaintInformation>& complaints)
+{
+    // Display all users
+    cout << endl;
+    cout << "View current complaints\n";
+    Line(80, '=', true);
+    for (int i = 0; i < complaints.size(); i++)
+    {
+        cout << "#" << i << " | " << complaints[i].CustomerFirstName << " " << complaints[i].CustomerLastName << " | " << "Date occured: " << complaints[i].DateMade << endl;
+        cout << "Complaint description: " << complaints[i].ComplaintReason;
+        cout << endl;
+        cout << endl;
+    }
+}
+
+// create a new complaint record in the CSV.
+void LodgeNewComplaint(vector<complaintInformation>& complaint)
+{
+    //Structure variables
+    string CustomerFirstName;
+    string CustomerLastName;
+    string ComplaintReason;
+    string DateMade;
+    string DriverName;
+
+    // show screen to create a new user.
+    cout << endl;
+    cout << "Lodge new complaint" << endl;
+    Line(80, '=', true);
+    cout << endl;
+    cout << "Enter new complaint" << endl;
+    Line(80, '-', true);
+    cout << endl;
+    cout << "Enter Driver's name: ";
+    cin >> DriverName;
+    cout << "Enter customer's first name: ";
+    cin >> CustomerFirstName;
+    cout << "Enter customer's last name: ";
+    cin >> CustomerLastName;
+    cout << "Enter date occured dd/mm/yyyy: ";
+    cin >> DateMade;
+    cout << "Please describe the reason for issuing this complaint:";
+    // BUG here, despite the code looking ok.
+    // the below code isn't apparently run. the execution environment 'skips' this code and starts writing to the vector, then the CSV.
+    // what needs to be done to force this data entry to take place?
+    getline(cin, ComplaintReason);
+    cout << endl;
+
+    // Push new user into vector
+    complaintInformation complaintItem(CustomerFirstName, CustomerLastName, ComplaintReason, DateMade, DriverName);
+    complaint.push_back(complaintItem);
+
+    // Test receipt of new data
+    WriteComplaintCSVAppendOnly(complaint, "complaints.csv");
+}
+
+// remove an entry from the complaints CSV. this is because the complaint has been resolved.
+void ReportItemResolvedRemoveEntry(vector<complaintInformation>& complaints)
+{
+    int itemToRemove;
+
+    // Display all users
+    cout << endl;
+    cout << "Remove a complaint\n";
+    Line(80, '=', true);
+    for (int i = 0; i < complaints.size(); i++)
+    {
+        cout << "#" << i << " | " << complaints[i].CustomerFirstName << " " << complaints[i].CustomerLastName << " | " << "Date occured: " << complaints[i].DateMade << endl;
+        cout << "Complaint description: " << complaints[i].ComplaintReason;
+        cout << endl;
+        cout << endl;
+    }
+
+    cout << "Select the case number to remove: ";
+    cin >> itemToRemove;
+
+    // do the actual deletion in the vector
+    complaints.erase( complaints.begin() + itemToRemove);
+
+    // update the CSV file
+    WriteComplaintCSVFullOverWrite(complaints, "complaints.csv");
+
+
+}
+
 //----------------------------------------------------------------------------------------------------------------------------
 //Draw line
 
@@ -1237,6 +1474,38 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
         line = "";
     }
 
+// complaints_feature
+// TODO: fill in the code
+void LoadComplaintCSV(vector<complaintInformation>& complaintInfo, string filename)
+{
+    ifstream inputFile;
+    inputFile.open(filename);
+    string line = "";
+
+    while (getline(inputFile, line))
+    {
+        //Init vars to load data into
+        string CustomerFirstName;
+        string CustomerLastName;
+        string ComplaintReason;
+        string DateMade;
+        string DriverName;
+
+        //Takes string and separates data using comma delimiter
+        string tempString;
+        stringstream inputString(line);
+        getline(inputString, CustomerFirstName, ',');
+        getline(inputString, CustomerLastName, ',');
+        getline(inputString, ComplaintReason, ',');
+        getline(inputString, DateMade, ',');
+        getline(inputString, DriverName);
+
+
+        //Load data into vector using structure constructor
+        complaintInformation complaintItem(CustomerFirstName, CustomerLastName, ComplaintReason, DateMade, DriverName);
+        complaintInfo.push_back(complaintItem);
+        line = "";
+    }
 }
 
 //Write CSV function - Need to update to use same switch case for directing information
@@ -1300,5 +1569,35 @@ void WriteLostItemsCSV(vector<lostItems>& itemReport, string filename)
     appfile.close();
 }
 
+void WriteComplaintCSVAppendOnly(vector<complaintInformation>& complaintInformation, string filename)
+{
+    int i = 0; //Starts at vector index of first user
+    ofstream appfile;
+    appfile.open(filename, ios::app);
+
+    for (auto itr = complaintInformation.begin(); itr != complaintInformation.end(); itr++) {
+
+        appfile << complaintInformation[i].CustomerFirstName << "," << complaintInformation[i].CustomerLastName << "," << complaintInformation[i].ComplaintReason << "," << complaintInformation[i].DateMade << "," << complaintInformation[i].DriverName << endl;
+        i++;
+    }
+
+    appfile.close();
+}
+
+void WriteComplaintCSVFullOverWrite(vector<complaintInformation>& complaintInformation, string filename)
+{
+    int i = 0; //Starts at vector index of first user
+    ofstream appfile;
+    appfile.open(filename, ios::out);
+
+    for (auto itr = complaintInformation.begin(); itr != complaintInformation.end(); itr++) {
+
+        appfile << complaintInformation[i].CustomerFirstName << "," << complaintInformation[i].CustomerLastName << "," << complaintInformation[i].ComplaintReason << "," << complaintInformation[i].DateMade << "," << complaintInformation[i].DriverName << endl;
+        i++;
+    }
+
+    appfile.close();
+}
+
 //----------------------------------------------------------------------------------------------------------------------------
-//Code snippets
+
