@@ -10,7 +10,7 @@
 using namespace std;
 
 //----------------------------------------------------------------------------------------------------------------------------
-//Structs 
+//Structs // test comment 2
 struct userInformation
 {
     //Structure variables
