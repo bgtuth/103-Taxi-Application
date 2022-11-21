@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <iomanip> //formatting
-#include <ctime>; //date & random number
+#include <ctime> //date & random number
 #pragma warning(disable:4996) //disable system warning for ctime library
 
 using namespace std;
@@ -118,7 +118,9 @@ struct complaintInformation
         this->ComplaintReason = ComplaintReason;
         this->DateMade = DateMade;
         this->DriverName = DriverName;
-=======
+    }
+};
+
 struct lostItems {
     //Status 
     int ReportStatus;
@@ -171,7 +173,7 @@ void WriteUserCSV(vector<userInformation>&, string);
 void WriteBookTaxiCSV(vector<bookingInformation>&, string);
 void WriteComplaintCSVAppendOnly(vector<complaintInformation>&, string);
 void WriteComplaintCSVFullOverWrite(vector<complaintInformation>&, string);
-=======
+
 void LoadLostItemsCSV(vector<lostItems>&, string);
 
 void WriteUserCSV(vector<userInformation>&, string);
@@ -187,7 +189,7 @@ void DisplayUserMenu();
 void DisplayBookingMenu();
 
 void DisplayComplaintsMenu();
-=======
+
 void DisplayLostItemMenu();
 
 
@@ -205,7 +207,7 @@ void ViewPastBookings(vector<bookingInformation>&);
 void LodgeNewComplaint(vector<complaintInformation>&);
 void ViewPastComplaints(vector<complaintInformation>&);
 void ReportItemResolvedRemoveEntry(vector<complaintInformation>&);
-=======
+
 //Lost item functions
 void ReportLostItem(vector<lostItems>&, vector<bookingInformation>&);
 void ViewLostItemsReports(vector<lostItems>&, vector<bookingInformation>&);
@@ -231,7 +233,7 @@ int main()
     // Load complaints data, even if empty.
     vector<complaintInformation> complaints; //Create vector
     LoadComplaintCSV(complaints, "complaints.csv"); // Load users 
-=======
+
     vector<lostItems> itemReport; //Create member vector of users
     LoadLostItemsCSV(itemReport, "itemslost.csv"); // Load lost item database 
 
@@ -386,12 +388,17 @@ mainmenu:
         }
         break;
 
-// complaints_feature
+        // Complaints feature
     case 2:
         // Lodge new complaint and view current complaints.
     complaintsmenu:
+
         system("CLS"); //Clear console
         DisplayComplaintsMenu();
+
+        complaints.clear();
+        LoadComplaintCSV(complaints, "complaints.csv");
+
 
         // user input
         int complaintsMenu;
@@ -406,8 +413,10 @@ mainmenu:
             // The CSV with previous comments is loaded into the ventor.
             // Here I am adding a new complaint and just want one entry in the vector.
             // So I clear the content of the vector for this purpose.
+
             complaints.clear();
             LodgeNewComplaint(complaints);
+
             cout << endl;
             cout << "Complaint saved";
             Line(80, '-', true);
@@ -457,12 +466,18 @@ mainmenu:
                 LoadComplaintCSV(complaints, "complaints.csv");
                 
                 ReportItemResolvedRemoveEntry(complaints);
-                int complaintResolveMenuOptions = 0;
+
+                int complaintResolveMenuOptions;
+
                 Line(80, '-', true);
                 cout << endl;
+
                 cout << "Select one of the following options:" << endl;
                 cout << "1) Return to previous menu" << endl;
                 cout << "2) Return to main menu" << endl;
+                
+                cin >> complaintResolveMenuOptions;
+                cout << endl;
 
                 switch (complaintResolveMenuOptions)
                 {
@@ -473,10 +488,11 @@ mainmenu:
                     goto mainmenu;
                     break;
                 }
-
+                break;
             }
             break;
         }
+        break;
 
     case 3:
 
@@ -741,7 +757,6 @@ reenterTripID:
 
     WriteLostItemsCSV(itemReport, "itemslost.csv");
 }
-
 
 void ViewLostItemsReports(vector<lostItems>& itemReport, vector<bookingInformation>& bookingInfo) {
 
@@ -1223,6 +1238,11 @@ void LodgeNewComplaint(vector<complaintInformation>& complaint)
     string DriverName;
 
     // show screen to create a new user.
+
+    //Clear input stream
+    cin.clear();
+    cin.ignore();
+
     cout << endl;
     cout << "Lodge new complaint" << endl;
     Line(80, '=', true);
@@ -1231,7 +1251,7 @@ void LodgeNewComplaint(vector<complaintInformation>& complaint)
     Line(80, '-', true);
     cout << endl;
     cout << "Enter Driver's name: ";
-    cin >> DriverName;
+    getline(cin, DriverName);
     cout << "Enter customer's first name: ";
     cin >> CustomerFirstName;
     cout << "Enter customer's last name: ";
@@ -1239,9 +1259,10 @@ void LodgeNewComplaint(vector<complaintInformation>& complaint)
     cout << "Enter date occured dd/mm/yyyy: ";
     cin >> DateMade;
     cout << "Please describe the reason for issuing this complaint:";
-    // BUG here, despite the code looking ok.
-    // the below code isn't apparently run. the execution environment 'skips' this code and starts writing to the vector, then the CSV.
-    // what needs to be done to force this data entry to take place?
+
+    cin.clear();
+    cin.ignore();
+
     getline(cin, ComplaintReason);
     cout << endl;
 
@@ -1473,9 +1494,9 @@ void LoadBookingInfoCSV(vector<bookingInformation>& bookingInfo, string filename
         bookingInfo.push_back(bInfo);
         line = "";
     }
+}
 
-// complaints_feature
-// TODO: fill in the code
+// Load complaints feature
 void LoadComplaintCSV(vector<complaintInformation>& complaintInfo, string filename)
 {
     ifstream inputFile;
@@ -1598,6 +1619,3 @@ void WriteComplaintCSVFullOverWrite(vector<complaintInformation>& complaintInfor
 
     appfile.close();
 }
-
-//----------------------------------------------------------------------------------------------------------------------------
-
